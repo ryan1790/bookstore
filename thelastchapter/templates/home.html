@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% from 'bookList.html' import booklist %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="banner"><img class="banner-image" src="{{ url_for('static', filename='janko-ferlic-sfL_QOnmy00-unsplash.jpg') }}"></div>
+{{booklist('Favorite Books of 3024')}}
+{{booklist('Worst Books of 3023')}}
+
+{% endblock %}

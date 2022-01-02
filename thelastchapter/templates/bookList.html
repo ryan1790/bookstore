@@ -1,0 +1,25 @@
+{% macro booklist(title, books) -%}
+<div class="container">
+    <h2 class="container-title">{{title}}</h2> 
+    <svg class="scroll left-scroll" data-left-scroll aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-circle-left" class="svg-inline--fa fa-chevron-circle-left fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zM142.1 273l135.5 135.5c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L226.9 256l101.6-101.6c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L142.1 239c-9.4 9.4-9.4 24.6 0 34z"></path></svg>
+    <div class="books-list" data-scroll>
+        {% for book in books %}
+            <div class="book-card"><a class="book-link" href="{{ url_for('book.display', id=book.book_id) }}"><img class="book-image" src="{{ book.image }}"></a></div>
+        {% endfor %}
+        <!-- <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://book-assets.openroadmedia.com/9781504044486-book-cover.jpg"></a></div> -->
+        <!-- <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://book-assets.openroadmedia.com/9781504044486-book-cover.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://orion-uploads.openroadmedia.com/sm_9333ba5b72d2-hp.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://orion-uploads.openroadmedia.com/sm_f7e651-tolkien-lordoftherings.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://orion-uploads.openroadmedia.com/sm_e82064-and-then-there-were-none.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://orion-uploads.openroadmedia.com/sm_f7e651-tolkien-lordoftherings.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://book-assets.openroadmedia.com/9781497644984-book-cover.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://orion-uploads.openroadmedia.com/sm_f7e651-tolkien-lordoftherings.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://book-assets.openroadmedia.com/9781504044486-book-cover.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://orion-uploads.openroadmedia.com/sm_9333ba5b72d2-hp.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://book-assets.openroadmedia.com/9781504044486-book-cover.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://orion-uploads.openroadmedia.com/sm_e82064-and-then-there-were-none.jpg"></a></div>
+        <div class="book-card"><a class="book-link" href=""><img class="book-image" src="https://orion-uploads.openroadmedia.com/sm_c19ae1-the-lion-the-witch-and-the-wardrobe-book.jpg"></a></div> -->
+    </div>
+    <svg class="scroll right-scroll" data-right-scroll aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-circle-right" class="svg-inline--fa fa-chevron-circle-right fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm113.9 231L234.4 103.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L285.1 256 183.5 357.6c-9.4 9.4-9.4 24.6 0 33.9l17 17c9.4 9.4 24.6 9.4 33.9 0L369.9 273c9.4-9.4 9.4-24.6 0-34z"></path></svg>
+</div>
+{%- endmacro %}

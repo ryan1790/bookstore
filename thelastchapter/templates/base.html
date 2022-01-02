@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+    <title>{% block title %} {% endblock %} - TLC</title>
+    <script src="{{ url_for('static', filename='js/navbar.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/scrollButtons.js') }}" defer></script>
+    <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static', filename='svgs/book-solid.svg') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Waterfall&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo-title">
+            <img id="nav-logo" class="nav-svg" src="{{ url_for('static', filename='svgs/book-solid.svg') }}">
+            <span class="nav-title">The Last Chapter</span>
+        </div>
+        <input type="text" class="nav-search" placeholder="Search">
+        <ul class="nav-list">
+            <li class="nav-item">
+                <div class="dropdown" data-dropdown>
+                    <span class="link" data-dropdown-button>Genres</span>
+                    <div class="dropdown-menu genres-dropdown-menu">
+                        <ul class="genres-list">
+                            <div class="column">
+                                <li class="genre"><a href="">Action and Adventure</a></li>
+                                <li class="genre"><a href="">Art/Architecture</a></li>
+                                <li class="genre"><a href="">Autobiography</a></li>
+                                <li class="genre"><a href="">Biography</a></li>
+                                <li class="genre"><a href="">Business/Economics</a></li>
+                                <li class="genre"><a href="">Children's Books</a></li>
+                                <li class="genre"><a href="">Crafts/Hobbies</a></li>
+                                <li class="genre"><a href="">Classics</a></li>
+                                <li class="genre"><a href="">Cookbooks</a></li>
+                                <li class="genre"><a href="">Comics</a></li>
+                                <li class="genre"><a href="">Coming-of-age</a></li>
+                                <li class="genre"><a href="">Crime</a></li>
+                                <li class="genre"><a href="">Drama</a></li>
+                            </div>
+                            <div class="column">
+                                <li class="genre"><a href="">Health/Fitness</a></li>
+                                <li class="genre"><a href="">Fantasy</a></li>
+                                <li class="genre"><a href="">History</a></li>
+                                <li class="genre"><a href="">Graphic Novels</a></li>
+                                <li class="genre"><a href="">Home and Garden</a></li>
+                                <li class="genre"><a href="">Historical Fiction</a></li>
+                                <li class="genre"><a href="">Humor</a></li>
+                                <li class="genre"><a href="">Horror</a></li>
+                                <li class="genre"><a href="">LGBTQ+</a></li>
+                                <li class="genre"><a href="">Mystery</a></li>
+                                <li class="genre"><a href="">Philosophy</a></li>
+                                <li class="genre"><a href="">Poetry</a></li>
+                                <li class="genre"><a href="">Religion</a></li>
+                            </div>
+                            <div class="column">
+                                <li class="genre"><a href="">Romance</a></li>
+                                <li class="genre"><a href="">Satire</a></li>
+                                <li class="genre"><a href="">True Crime</a></li>
+                                <li class="genre"><a href="">Science Fiction</a></li>
+                                <li class="genre"><a href="">Short Stories</a></li>
+                                <li class="genre"><a href="">Science & Technology</a></li>
+                                <li class="genre"><a href="">Suspense</a></li>
+                                <li class="genre"><a href="">Self Help</a></li>
+                                <li class="genre"><a href="">Thriller</a></li>
+                                <li class="genre"><a href="">Sports and Leisure</a></li>
+                                <li class="genre"><a href="">Travel</a></li>
+                                <li class="genre"><a href="">Young adult</a></li>
+                                <li class="genre"><a href="">True Crime</a></li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="link" href="#">
+                    <img class="nav-svg nav-cart" src="{{ url_for('static', filename='svgs/shopping-cart-solid.svg') }}">
+                </a>
+            </li>
+            <li class="nav-item">
+                <div class="dropdown" data-dropdown>
+                    <img class="nav-svg nav-account link" data-dropdown-button src="{{ url_for('static', filename='svgs/user-circle-solid.svg') }}">
+                    <div class="dropdown-menu">
+                        {% if g.user %}
+                            <a href="{{ url_for('account.display') }}" class="dropdown-link">Account</a>
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-link">Log Out</a>
+                        {% else %}
+                        <form class="dropdown-form" method="POST" action="{{ url_for('auth.login') }}">
+                            <label for="email">Email:</label>
+                            <input name="email" type="email" id="email" class="text-input">
+                            <label for="password">Password:</label>
+                            <input name="password" type="password" id="password" class="text-input">
+                            <button type="submit" class="login">Log In</button>
+                        </form>
+                        <a href="{{ url_for('auth.register') }}" class="dropdown-link"> Register New Account</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <section class="content">
+        {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </section>
+</body>
+</html>

@@ -1,0 +1,4 @@
+include thlastchapter/schema.sql
+graft thelastchapter/static
+graft thelastchapter/templates
+global-exclude *.pyc

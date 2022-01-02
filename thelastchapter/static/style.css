@@ -1,0 +1,428 @@
+:root {
+	--primary-color: hsl(214, 79%, 39%);
+	--primary-light: hsl(214, 81%, 80%);
+	--secondary-color: hsl(263, 43%, 63%);
+	--secondary-dark: hsl(262, 40%, 34%);
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0;
+	font-family: 'EB Garamond', serif;
+}
+
+body {
+	margin-top: 3.5rem;
+}
+
+.flash {
+	background-color: var(--secondary-color);
+	color: white;
+	font-size: 1.1rem;
+	width: 95%;
+	margin: 4.5rem auto 1.5rem auto;
+	text-align: center;
+	padding: 1rem;
+}
+
+.navbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 3.5rem;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: var(--primary-color);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	z-index: 10;
+}
+
+.nav-title {
+	font-family: 'Waterfall', cursive;
+	font-size: 2.5rem;
+	color: white;
+}
+
+.nav-svg {
+	height: 1.5rem;
+}
+
+#nav-logo {
+	margin: 0 6px 0 6px;
+}
+
+.nav-search {
+	border-radius: 1rem;
+	border: none;
+	margin-left: 2rem;
+	padding: .5rem;
+	width: 18rem;
+	padding-left: 1rem;
+}
+
+.nav-list {
+	margin: 0;
+	padding: 0;
+	gap: 10px;
+	height: 100%;
+	width: 40%;
+	display: flex;
+	align-items: center;
+	justify-content: right;
+}
+
+.nav-item {
+	display: inline-block;
+	list-style-type: none;
+	margin: 3px;
+}
+
+.link {
+	background: none;
+	border: none;
+	text-decoration: none;
+	color: white;
+	font-family: inherit;
+	font-size: inherit;
+	cursor: pointer;
+	padding: 0;
+}
+
+.dropdown {
+	position: relative;
+}
+
+.dropdown-form > label {
+	display: block;
+}
+
+.dropdown > span.link {
+	font-size: 1.2rem;
+}
+
+.dropdown-menu {
+	position: absolute;
+	top: calc(100% + .4rem);
+	right: -.2rem;
+	color: black;
+	background-color: white;
+	padding: 7px;
+	border: 1px solid black;
+	box-shadow: 4px 5px 11px hsl(0, 0%, 20%);
+	border-radius: .25rem;
+	opacity: 0;
+	transform: translateY(-15px);
+	transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+	pointer-events: none;
+}
+
+.nav-list > li:last-of-type {
+	margin-right: 1rem;
+}
+
+.dropdown.active > .link + .dropdown-menu {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
+.flex-wrapper > .column {
+	padding: 2rem;
+	display: inline-block;
+}
+
+.genre {
+	list-style-type: none;
+}
+
+.genre > a {
+	color: hsl(0, 0%, 53%);
+	text-decoration: none;
+}
+
+.genre > a:visited {
+	color: hsl(0, 0%, 53%);
+}
+
+.genre > a:hover {
+	color: black;
+}
+
+.genres-list {
+	display: flex;
+	gap: 4rem;
+}
+
+.genres-dropdown-menu {
+	width: 36.2rem;
+	right: -5.5rem;
+	padding: .5rem 0 .5rem 0;
+}
+
+.dropdown-form {
+	background-color: hsl(0, 1.6%, 88%);
+	border-radius: .25rem;
+	padding: 5px;
+	margin: 1px 1px 5px 1px;
+}
+
+.text-input {
+	margin-bottom: 3px;
+	border-radius: .5rem;
+	border: none;
+	line-height: 1.3rem;
+	display: block;
+	border: 1px solid var(--primary-color);
+}
+
+.login {
+	margin: 4px;
+	display: block;
+	color: white;
+	background-color: var(--secondary-color);
+	border: none;
+	border-radius: 1rem;
+	padding: .2rem .5rem;
+	cursor: pointer;
+}
+
+.login:hover {
+	background-color: var(--secondary-dark);
+}
+
+.dropdown-link {
+	text-decoration: none;
+	color: #777;
+	display: block;
+}
+
+.dropdown-link:hover {
+	color: black;
+}
+
+.banner {
+	overflow: hidden;
+}
+
+.banner-image {
+	max-width: 100%;
+}
+
+.container {
+	position: relative;
+}
+
+.container-title {
+	margin-left: 1.5rem;
+	margin-bottom: 0;
+}
+
+.books-list {
+	width: 92%;
+	margin: auto;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	height: 19rem;
+	display: flex;
+	align-items: center;
+}
+
+.scroll {
+	z-index: 1;
+	position: absolute;
+	top: 52%;
+	height: 2rem;
+	border-radius: 50%;
+	background-color: var(--primary-color);
+	color: white;
+	transition: background-color .8s cubic-bezier(0.075, 0.82, 0.165, 1),
+		transform .8s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.scroll:hover {
+	transform: scale(1.1);
+	background-color: var(--primary-light);
+}
+
+.left-scroll {
+	left: 2.5%;
+}
+
+.right-scroll {
+	right: 2.5%;
+}
+
+.book-card {
+	display: inline-block;
+	height: 15rem;
+	margin: 0 5px 0 5px;
+}
+
+.book-card > a > img.book-image {
+	max-height: 100%;
+}
+
+.book-link {
+	display: inline-block;
+	height: 15rem;
+	text-decoration: none;
+	transition: box-shadow 1.2s cubic-bezier(0.075, 0.82, 0.165, 1), transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.book-link:hover {
+	box-shadow: 0 10px 10px var(--primary-light);
+	transform: scale(1.1);
+}
+
+.book-link:first-child {
+	margin-left: .5rem;
+}
+
+.form-title {
+	font-size: 2rem;
+	margin: 5rem auto 2rem auto;
+	width: 22rem;
+	text-align: center;
+}
+
+.form-container {
+	width: 80%;
+	max-width: 25rem;
+	min-width: 5rem;
+	background-color: hsl(0, 0%, 94%);
+	margin: .5rem auto;
+	padding: 1rem 0 1rem 1.5rem;
+	border: double var(--primary-color);
+}
+
+.form-label {
+	display: block;
+}
+
+.main-form > .form-label {
+	font-size: 1.2rem;
+}
+
+.main-form > .text-input {
+	line-height: 1.6rem;
+	width: 80%;
+	margin-bottom: .5rem;
+}
+
+.main-form > .login {
+	font-size: 1rem;
+	padding: .2rem .5rem;
+	margin-top: .8rem;
+}
+
+.flex-wrapper {
+	display: flex;
+}
+
+.genres-list > .column {
+	padding: 0;
+}
+
+.column > .cover-display {
+	width: 18rem;
+}
+
+.grid-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-column-gap: .5rem;
+}
+
+.info {
+	text-align: right;
+	color: hsl(0, 0%, 67%);
+	text-shadow: hsl(214, 81%, 80%);
+}
+
+.value {
+	color: black;
+}
+
+.book-title {
+	font-size: 2.5rem;
+}
+
+.price {
+	font-size: 1.2rem;
+}
+
+.available {
+	color: hsl(152, 33%, 42%);
+	font-size: 1.24rem;
+	margin: .3rem 0;
+}
+
+.unavailable {
+	color: hsl(0, 47%, 51%);
+	font-size: 1.24rem;
+	margin: .3rem 0;
+}
+
+.available > svg,
+.unavailable > svg {
+	height: .9rem;
+}
+
+.cart {
+	background-color: var(--secondary-color);
+	border: none;
+	padding: .5rem 1rem;
+	color: white;
+	border-radius: 1rem;
+	font-size: 1.2rem;
+	cursor: pointer;
+}
+
+.cart:hover {
+	background-color: var(--secondary-dark);
+	color: var(--secondary-color);
+	border: 1px solid var(--secondary-color);
+}
+
+.cart:disabled {
+	cursor: not-allowed;
+	background-color: hsl(0, 0%, 53%);
+	color: white;
+}
+
+.wish-list {
+	border: .1rem solid var(--primary-color);
+	background-color: white;
+	color: var(--primary-color);
+	padding: .5rem 1rem;
+	margin-left: .2rem;
+	border-radius: 1rem;
+	font-size: 1.2rem;
+	cursor: pointer;
+}
+
+.wish-list:hover {
+	background-color: var(--primary-color);
+	color: var(--primary-light);
+}
+
+.cart > svg,
+.wish-list > svg {
+	height: 1rem;
+}
+
+.main-title {
+	font-size: 2rem;
+	text-align: center;
+	margin: 4rem 0 2rem 0;
+}
+
+.sub-title {
+	font-size: 1.5rem;
+	padding-left: 1.4rem;
+}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="form-title" class="form-title">{% block title %}Register{% endblock %} New Account</h1>
+<div class="form-container">
+    <form class="main-form" method="POST" action="{{ url_for('auth.register') }}">
+        <label class="form-label" for="email">Email:</label>
+        <input name="email" required type="email" id="email" class="text-input">
+        <label class="form-label" for="password">Password:</label>
+        <input name="password" required type="password" id="password" class="text-input">
+        <button type="submit" class="login">Register</button>
+    </form>
+</div>
+{% endblock %}

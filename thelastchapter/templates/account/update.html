@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="form-title">{% block title %}Update Account{% endblock %} Info</h1>
+    <div class="form-container">
+        <form class="main-form" action="{{ url_for('account.update')}}" method="POST">
+            <label class="form-label" for="email">Email:</label>
+            <input required name="email" type="email" id="email" value="{{ g.user.email }}" class="text-input">
+            <label class="form-label" for="username">Display Name:</label>
+            <input required name="username" type="text" id="username" value="{{ g.user.username }}" class="text-input">
+            <label class="form-label" for="old-password">Old Password:</label>
+            <input name="old-password" type="password" id="old-password" class="text-input">
+            <label class="form-label" for="new-password"> New Password:</label>
+            <input name="new-password" type="password" id="new-password" class="text-input">
+            <label class="form-label" for="check-password">Confirm New Password:</label>
+            <input name="check-password" type="password" id="check-password" class="text-input">
+            <button type="submit" class="login">Update</button>
+        </form>
+    </div>
+{% endblock %}

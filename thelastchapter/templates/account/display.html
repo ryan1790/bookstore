@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% from 'bookList.html' import booklist %}
+
+{% block content %}
+    <h1 class="main-title">My {% block title %}Account{% endblock %}</h1>
+    <h3 class="sub-title">My Orders</h3>
+    <div>
+        Orders go here!
+    </div>
+    <h3 class="sub-title">View Cart</h3>
+    <div>
+        Display cart items here!
+    </div>
+    <h3 class="sub-title">View Wishlists</h3>
+    {% for list in lists %}
+        {{booklist(list[0], list[2])}}
+    {% endfor %}
+{% endblock %}
