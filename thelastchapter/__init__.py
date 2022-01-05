@@ -1,6 +1,8 @@
 from flask import Flask, render_template
 import os
 
+from thelastchapter import book_list
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -24,9 +26,10 @@ def create_app(test_config=None):
     def home():
         return render_template('home.html')
 
-    from thelastchapter import auth, book, account
-    app.register_blueprint(account.bp)
+    from thelastchapter import auth, book, book_list, account
     app.register_blueprint(auth.bp)
+    app.register_blueprint(account.bp)
     app.register_blueprint(book.bp)
+    app.register_blueprint(book_list.bp)
 
     return app

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="form-title">{% block title %}Update {{list_data.name}}{% endblock %}</h1>
+    <div class="form-container">
+        <form method="POST" class="main-form" action="{{ url_for('list.update', list_id=list_data.id) }}">
+            <label class="form-label" for="name">List Name: </label>
+            <input type="text" id="name" name="name" class="text-input" value="{{list_data.name}}">
+            <button type="submit" class="login">Update Name</button>
+        </form>
+        <form action="{{ url_for('list.delete', list_id=list_data.id) }}" method="POST">
+            <button class="login danger">Delete List</button>
+        </form>
+    </div>
+{% endblock %}

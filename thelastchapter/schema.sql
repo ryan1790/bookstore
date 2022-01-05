@@ -20,6 +20,7 @@ CREATE TABLE books (
     info TEXT,
     lang TEXT NOT NULL,
     pages INTEGER,
+    isbn TEXT NOT NULL,
     price TEXT NOT NULL
 );
 
@@ -32,8 +33,16 @@ CREATE TABLE list_names (
 
 CREATE TABLE book_lists (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    list_id TEXT NOT NULL,
+    list_id INTEGER NOT NULL,
     book_id INTEGER NOT NULL,
     FOREIGN KEY (list_id) REFERENCES list_names (id),
+    FOREIGN KEY (book_id) REFERENCES books (id)
+);
+
+CREATE TABLE carts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    book_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (book_id) REFERENCES books (id)
 );

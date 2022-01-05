@@ -3,6 +3,8 @@
 	--primary-light: hsl(214, 81%, 80%);
 	--secondary-color: hsl(263, 43%, 63%);
 	--secondary-dark: hsl(262, 40%, 34%);
+	--danger-color: hsl(0, 55%, 44%);
+	--danger-light: hsl(0, 69%, 64%);
 }
 
 html,
@@ -181,6 +183,7 @@ body {
 }
 
 .login {
+	position: relative;
 	margin: 4px;
 	display: block;
 	color: white;
@@ -314,6 +317,10 @@ body {
 	margin-bottom: .5rem;
 }
 
+textarea.text-input {
+	resize: vertical;
+}
+
 .main-form > .login {
 	font-size: 1rem;
 	padding: .2rem .5rem;
@@ -395,24 +402,8 @@ body {
 	color: white;
 }
 
-.wish-list {
-	border: .1rem solid var(--primary-color);
-	background-color: white;
-	color: var(--primary-color);
-	padding: .5rem 1rem;
-	margin-left: .2rem;
-	border-radius: 1rem;
-	font-size: 1.2rem;
-	cursor: pointer;
-}
-
-.wish-list:hover {
-	background-color: var(--primary-color);
-	color: var(--primary-light);
-}
-
 .cart > svg,
-.wish-list > svg {
+.wishlist > div > svg {
 	height: 1rem;
 }
 
@@ -425,4 +416,191 @@ body {
 .sub-title {
 	font-size: 1.5rem;
 	padding-left: 1.4rem;
+}
+
+.list-card {
+	display: flex;
+}
+
+.list-image {
+	width: 10rem;
+	margin: 2rem 1rem 2rem 4rem;
+}
+
+.list-text-content > h4,
+.list-text-content > p {
+	margin: 0;
+}
+
+.list-text-content > a > h3 {
+	font-size: 1.4rem;
+	margin-top: 3rem;
+	margin-bottom: .5rem;
+}
+
+.list-card + .list-divider {
+	width: 80%;
+	border-top: 1px solid hsl(0, 0%, 53%);
+	border-radius: 50%;
+}
+
+.list-link {
+	text-decoration: none;
+	color: inherit;
+}
+
+.list-title {
+	display: inline-block;
+	font-size: 2rem;
+	margin: 2rem 0 2rem 2rem;
+}
+
+.wishlist {
+	font-size: 1.2rem;
+	display: inline;
+	position: absolute;
+	border: .1rem solid var(--primary-color);
+	background-color: white;
+	color: var(--primary-color);
+	padding: 0;
+	border-radius: 1rem;
+	font-size: 1.2rem;
+	overflow: hidden;
+	top: -.8rem;
+	width: 11.5rem;
+	left: .2rem;
+}
+
+.wishlist > div > svg {
+	margin: 0 .6rem;
+}
+
+.wishlist[data-expanded="false"] > .wishlist-form {
+	display: none;
+}
+
+.wishlist[data-expanded="true"] {
+	padding: 0;
+	width: 13.5rem;
+}
+
+.wishlist-positioning {
+	position: relative;
+}
+
+div[data-wishlist-button] {
+	padding: .5rem 0;
+	cursor: pointer;
+}
+
+.list-search {
+	border-radius: .2rem;
+	line-height: 1.3rem;
+	display: block;
+	border: 1px solid var(--secondary-color);
+	margin: .2rem auto;
+}
+
+.list-name-container {
+	color: black;
+	cursor: pointer;
+}
+
+.list-name-container:hover {
+	color: var(--primary-light);
+	background-color: var(--primary-color);
+}
+
+.list-name {
+	display: block;
+	width: 100%;
+	padding-left: .8rem;
+}
+
+.new-list {
+	padding-left: .4rem;
+	padding-bottom: .2rem;
+	background-color: var(--primary-light);
+}
+
+.remove-divider {
+	width: 12rem;
+	margin-left: .2rem;
+	border-radius: 50%;
+}
+
+.remove {
+	margin: 1.5rem 1rem;
+	padding: .5rem .8rem;
+	border: 1px solid var(--primary-color);
+	color: var(--primary-color);
+	background-color: white;
+	border-radius: .5rem;
+}
+
+.remove:hover {
+	background-color: var(--primary-light);
+}
+
+.danger {
+	background-color: var(--danger-color);
+	font-size: 1.05rem;
+	color: white;
+	position: relative;
+	top: -1.9rem;
+	left: 7.9rem;
+	margin: 0;
+}
+
+.danger:hover {
+	background-color: var(--danger-light);
+}
+.popup-container {
+	position: fixed;
+	width: 12rem;
+	height: 4.5rem;
+	top: 30%;
+	left: 50%;
+	overflow: hidden;
+	border-radius: .2rem;
+	z-index: 3;
+}
+
+.popup-success {
+	background: hsla(115.4, 27.1%, 81.2%, 0.9);
+	border: 1px solid hsl(109.3, 84.8%, 28.4%);
+	color: green;
+}
+
+.popup-error {
+	background: hsla(0, 27.1%, 81.2%, 0.9);
+	border: 1px solid hsl(0, 84.8%, 28.4%);
+	color: #b24929;
+}
+
+.popup-close {
+	position: absolute;
+	right: 0;
+	background-color: #f78e8e;
+	color: white;
+	padding: 0rem .2rem .1rem .2rem;
+	border-radius: .2rem;
+	margin: 0;
+	line-height: 1rem;
+	cursor: pointer;
+	user-select: none;
+}
+
+.popup-close:hover {
+	background-color: #bf4141;
+}
+
+.popup-title {
+	margin: 0 .5rem;
+	text-align: center;
+}
+
+.popup-body {
+	text-align: center;
+	margin: .2rem;
 }

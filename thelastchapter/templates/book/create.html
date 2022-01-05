@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="form-title">Add {% block title %}New Book{% endblock %} to Store</h1>
+    <div class="form-container">
+        <form class="main-form" method="POST" action="{{ url_for('book.create') }}">
+            <label for="title" class="form-label">Title: </label>
+            <input required id="title" name="title" type="text" class="text-input">
+            <label for="author" class="form-label">Author: </label>
+            <input required id="author" name="author" type="text" class="text-input">
+            <label for="image" class="form-label">Cover Image Url: </label>
+            <input required id="image" name="image" type="text" class="text-input">
+            <label for="published" class="form-label">Date Published: </label>
+            <input id="published" name="published" type="date" class="text-input">
+            <label for="genre" class="form-label">Genre: </label>
+            <input required id="genre" name="genre" type="text" class="text-input">
+            <label for="info" class="form-label">Description: </label>
+            <textarea required id="info" name="info" class="text-input"></textarea>
+            <label for="lang" class="form-label">Language: </label>
+            <input required id="lang" name="lang" type="text" class="text-input">
+            <label for="pages" class="form-label">Number of Pages: </label>
+            <input id="pages" name="pages" type="text" class="text-input">
+            <label for="isbn" class="form-label">ISBN: </label>
+            <input required id="isbn" name="isbn" type="text" class="text-input">
+            <label for="price" class="form-label">Price: </label>
+            <input required id="price" name="price" type="number" min="0" step=".01" class="text-input">
+            <button class="login">Create Book</button>
+        </form>
+    </div>
+{% endblock %}

@@ -36,7 +36,7 @@ def display():
     if lists_data == None:
         lists = []
     else:
-        lists = [ get_books(list) for list in lists_data ]
+        lists = [ get_books(book_list) for book_list in lists_data ]
     return render_template('account/display.html', lists=lists)
 
 @bp.route('/update', methods=('GET', 'POST'))

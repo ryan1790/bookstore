@@ -12,7 +12,7 @@
         Display cart items here!
     </div>
     <h3 class="sub-title">View Wishlists</h3>
-    {% for list in lists %}
-        {{booklist(list[0], list[2])}}
+    {% for books in lists %}
+        {{booklist(books[0], books[1], books[2])}}
     {% endfor %}
 {% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="form-title">{% block title %}Update {{book.title}}{% endblock %}</h1>
+    <div class="form-container">
+        <form class="main-form" method="POST" action="{{ url_for('book.create') }}">
+            <label for="title" class="form-label">Title: </label>
+            <input required id="title" name="title" type="text" class="text-input" value="{{book.title}}">
+            <label for="author" class="form-label">Author: </label>
+            <input required id="author" value="{{book.author}}" name="author" type="text" class="text-input">
+            <label for="image" class="form-label">Cover Image Url: </label>
+            <input required id="image" value="{{book.image}}" name="image" type="text" class="text-input">
+            <label for="published" class="form-label">Date Published: </label>
+            <input id="published" value="{{book.published}}" name="published" type="date" class="text-input">
+            <label for="genre" class="form-label">Genre: </label>
+            <input required id="genre" value="{{book.genre}}" name="genre" type="text" class="text-input">
+            <label for="info" class="form-label">Description: </label>
+            <textarea required id="info" name="info" class="text-input">{{book.info}}</textarea>
+            <label for="lang" class="form-label">Language: </label>
+            <input required id="lang" name="lang" type="text" value="{{book.lang}}" class="text-input">
+            <label for="pages" class="form-label">Number of Pages: </label>
+            <input id="pages" name="pages" value="{{book.pages}}" type="text" class="text-input">
+            <label for="isbn" class="form-label">ISBN: </label>
+            <input required id="isbn" value="{{book.isbn}}" name="isbn" type="text" class="text-input">
+            <label for="price" class="form-label">Price: </label>
+            <input required id="price" value="{{book.price}}" name="price" type="text" class="text-input">
+            <button class="login" type="submit">Update Book</button>
+        </form>
+        <form method="POST" action="{{ url_for('book.delete', id=book.id) }}">
+            <button type="submit" class="login danger">Delete Book</button>
+        </form>
+    </div>
+{% endblock %}

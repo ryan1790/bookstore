@@ -4,6 +4,7 @@
     <title>{% block title %} {% endblock %} - TLC</title>
     <script src="{{ url_for('static', filename='js/navbar.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/scrollButtons.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/wishlist.js') }}" defer></script>
     <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static', filename='svgs/book-solid.svg') }}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,10 +87,10 @@
                             <a href="{{ url_for('auth.logout') }}" class="dropdown-link">Log Out</a>
                         {% else %}
                         <form class="dropdown-form" method="POST" action="{{ url_for('auth.login') }}">
-                            <label for="email">Email:</label>
-                            <input name="email" type="email" id="email" class="text-input">
-                            <label for="password">Password:</label>
-                            <input name="password" type="password" id="password" class="text-input">
+                            <label for="dropdown-email">Email:</label>
+                            <input name="email" type="email" id="dropdown-email" class="text-input">
+                            <label for="dropdown-password">Password:</label>
+                            <input name="password" type="password" id="dropdown-password" class="text-input">
                             <button type="submit" class="login">Log In</button>
                         </form>
                         <a href="{{ url_for('auth.register') }}" class="dropdown-link"> Register New Account</a>

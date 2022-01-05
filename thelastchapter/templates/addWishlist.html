@@ -1,0 +1,28 @@
+{%- macro wishlist(user_id, lists, book_id) %}
+
+<div data-expanded="false" class="wishlist" >
+    <div data-wishlist-button>
+        <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="bookmark" class="svg-inline--fa fa-bookmark fa-w-12" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+            <path fill="currentColor" d="M336 0H48C21.49 0 0 21.49 0 48v464l192-112 192 112V48c0-26.51-21.49-48-48-48zm0 428.43l-144-84-144 84V54a6 6 0 0 1 6-6h276c3.314 0 6 2.683 6 5.996V428.43z"></path>
+        </svg>
+        <span class="button-text">Add to Wishlist</span>
+        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-down" class="svg-inline--fa fa-angle-down fa-w-10" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+            <path fill="currentColor" d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+        </svg>
+    </div>
+    <div data-wishlist-dropdown class="wishlist-form">
+        <input type="text" class="list-search" placeholder="Search for list">
+        {% for wishlist in lists %}
+            <div class="list-name-container">
+                <input type="hidden" value="10">
+                <span class="list-name">{{wishlist.name}}</span>
+                <input type="hidden" value="1">
+            </div>
+        {% endfor %}
+        <div data-expanded="false" class="new-list">
+            + New Wishlist
+        </div>
+    </div>
+</div>
+
+{%- endmacro %}
