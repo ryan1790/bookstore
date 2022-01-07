@@ -83,6 +83,7 @@
                     <img class="nav-svg nav-account link" data-dropdown-button src="{{ url_for('static', filename='svgs/user-circle-solid.svg') }}">
                     <div class="dropdown-menu">
                         {% if g.user %}
+                        <a href="{{ url_for('book.create') }}" class="dropdown-link new-book">New Book</a>
                             <a href="{{ url_for('account.display') }}" class="dropdown-link">Account</a>
                             <a href="{{ url_for('auth.logout') }}" class="dropdown-link">Log Out</a>
                         {% else %}
@@ -107,5 +108,9 @@
         {% endfor %}
         {% block content %}{% endblock %}
     </section>
+    <footer class="footer">
+        <div class="footer-text">Not quite a clone, but heavily inspired by <a href="https://bookshop.org/">Bookshop</a></div>
+        <div class="footer-text">All SVG elements are from <a href="https://fontawesome.com/license">Font Awesome</a></div>
+    </footer>
 </body>
 </html>

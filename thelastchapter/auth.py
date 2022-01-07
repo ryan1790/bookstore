@@ -10,6 +10,11 @@ from thelastchapter.db import get_db
 
 bp = Blueprint('auth', __name__)
 
+permissions = {
+    'BOOK_EDIT': ('ADMIN',),
+    'HOME_LISTS_EDIT': ('ADMIN', 'EDITOR'),
+}
+
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -88,6 +93,21 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
+            flash('Must be logged in to access')
             return redirect(url_for('auth.login'))
         return view(**kwargs)
     return wrapped_view
+
+def check_list_ownership(list_id):
+    db = get_db()
+    list_owner = db.execute('SELECT user_id FROM list_names WHERE id = ?', (list_id,)).fetchone()
+    if (g.user['id'] != list_owner['user_id']):
+        flash('You are not authorized to do that')
+        return redirect(url_for('account.display'))
+    return
+
+def check_permissions(action):
+    if (g.user['permissions'] not in permissions[action]):
+        flash('You are not authorized to do that')
+        return redirect(url_for('home'))
+    return

@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1 class="list-title">{% block title %}{{book_list[0]}}{% endblock %}</h1>
+    <a class="update-link" href="{{ url_for('list.update', list_id=book_list[1]) }}">Edit Title</a>
     {% for book in book_list[2] %}
         <div class="list-card">
             <a class="list-link" href="{{ url_for('book.display', id=book.id) }}">

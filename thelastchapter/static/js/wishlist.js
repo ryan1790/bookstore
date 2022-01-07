@@ -58,6 +58,7 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 			const b = wishlistDropdown.getAttribute('data-expanded');
 			if (b === 'true') {
 				wishlistDropdown.setAttribute('data-expanded', 'false');
+				handleResetNewListForm();
 			} else {
 				wishlistDropdown.setAttribute('data-expanded', 'true');
 			}
@@ -66,6 +67,12 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 			if (dropdown === wishlistDropdown) return;
 			dropdown.setAttribute('data-expanded', 'false');
 		});
+
+		document.querySelectorAll('[data-expand-new-list="true"]').forEach(newForm => {
+			if (newForm.closest('[data-wishlist-dropdown]') === wishlistDropdown?.closest('[data-wishlist-dropdown'))
+				return;
+			newForm.setAttribute('data-expand-new-list', 'false');
+		});
 	}
 
 	function handleClose(e) {
@@ -73,6 +80,73 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 			document.querySelector('.popup-container').remove();
 		}
 	}
+
+	function handleNewListForm(e) {
+		e.target.setAttribute('data-expand-new-list', 'true');
+	}
+
+	function handleResetNewListForm() {
+		const list = document.querySelectorAll('[data-expand-new-list="true"]');
+		for (let node of list) {
+			node.setAttribute('data-expand-new-list', 'false');
+		}
+	}
+
+	async function handleCreateNewList(e) {
+		e.preventDefault();
+		const formData = new FormData(this);
+		const options = {
+			method: 'POST',
+			body: formData,
+			credentials: 'same-origin'
+		};
+		const url = '/lists/create';
+		const res = await handleFetchNewList(url, options);
+		if (res) {
+			console.log(res)
+			const { dbStatus, message } = res;
+			timedPopup(dbStatus, message);
+		}
+		e.target.closest('[data-expanded]').setAttribute('data-expanded', 'false');
+		// append newly created list to wishlists on page
+	}
+
+	async function handleFetchNewList(url, options) {
+		const res = await fetch(url, options);
+		if (!res.ok) {
+			timedPopup('error', res.status);
+			return null;
+		} else {
+			return await res.json();
+		}
+	}
+
+	function handleSearch(e) {
+		const filter = e.target.value.toLowerCase();
+		console.log(filter);
+		let next = e.target.nextElementSibling
+		while (next?.matches('.list-name-container')) {
+			if (!next.textContent.toLowerCase().includes(filter)) {
+				next.setAttribute('data-hidden', 'true');
+			} else {
+				next.setAttribute('data-hidden', 'false');
+			}
+			next = next.nextElementSibling;
+		}
+	}
+
+	document.querySelectorAll('[data-expand-new-list]').forEach(form => {
+		form.addEventListener('click', handleNewListForm);
+	});
+
+	document.querySelectorAll('.create-list-form').forEach(form => {
+		console.log(form);
+		form.addEventListener('submit', handleCreateNewList);
+	});
+
+	document.querySelectorAll('.list-search').forEach(search => {
+		search.addEventListener('input', handleSearch);
+	});
 
 	document.addEventListener('click', handleWishExpand);
 	document.addEventListener('click', handleWishSend);

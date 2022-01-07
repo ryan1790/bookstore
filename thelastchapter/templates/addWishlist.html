@@ -13,14 +13,21 @@
     <div data-wishlist-dropdown class="wishlist-form">
         <input type="text" class="list-search" placeholder="Search for list">
         {% for wishlist in lists %}
-            <div class="list-name-container">
-                <input type="hidden" value="10">
+            <div data-hidden="false" class="list-name-container">
+                <input name="book-id" type="hidden" value="{{book_id}}">
                 <span class="list-name">{{wishlist.name}}</span>
-                <input type="hidden" value="1">
+                <input name="list-id" type="hidden" value="{{wishlist.id}}">
             </div>
         {% endfor %}
-        <div data-expanded="false" class="new-list">
+        <div data-expand-new-list="false" class="new-list">
             + New Wishlist
+        </div>
+        <div class="new-list-form" data-new-list>
+            <form class="create-list-form" action="#">
+                <input name='name' class="new-list-input" type="text" placeholder="Enter list name">
+                <input name="book-id" type="hidden" value="{{book_id}}">
+                <button class="login new-list-button">Confirm</button>
+            </form>
         </div>
     </div>
 </div>

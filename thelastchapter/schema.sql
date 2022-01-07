@@ -2,11 +2,13 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS list_names;
 DROP TABLE IF EXISTS book_lists;
+DROP TABLE IF EXISTS carts;
 
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE NOT NULL,
     username TEXT NOT NULL DEFAULT Anonymous,
+    -- permissions TEXT DEFAULT USER,
     password TEXT NOT NULL
 );
 
@@ -20,7 +22,7 @@ CREATE TABLE books (
     info TEXT,
     lang TEXT NOT NULL,
     pages INTEGER,
-    isbn TEXT NOT NULL,
+    -- isbn TEXT NOT NULL,
     price TEXT NOT NULL
 );
 
@@ -39,10 +41,11 @@ CREATE TABLE book_lists (
     FOREIGN KEY (book_id) REFERENCES books (id)
 );
 
-CREATE TABLE carts (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    book_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (book_id) REFERENCES books (id)
-);
+-- CREATE TABLE carts (
+--     id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     user_id INTEGER NOT NULL,
+--     book_id INTEGER NOT NULL,
+--     quantity INTEGER DEFAULT 1,
+--     FOREIGN KEY (user_id) REFERENCES users (id),
+--     FOREIGN KEY (book_id) REFERENCES books (id)
+-- );

@@ -15,6 +15,11 @@ def get_book(id):
         abort(404, f"Book id {id} doesn't exist.")
     return book
 
+def get_lists(user_id):
+    db = get_db()
+    lists = db.execute('SELECT * FROM list_names WHERE user_id = ?', (user_id,)).fetchall()
+    return lists
+
 @bp.route('/create', methods=('GET', 'POST'))
 def create():
     if request.method == 'POST':
@@ -50,7 +55,8 @@ def create():
 @bp.route('/<int:id>')
 def display(id):
     book = get_book(id)
-    return render_template('book/display.html', book=book)
+    lists = get_lists(g.user['id'])
+    return render_template('book/display.html', book=book, lists=lists)
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 def update(id):

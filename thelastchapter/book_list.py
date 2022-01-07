@@ -8,6 +8,8 @@ from thelastchapter.db import get_db
 
 from thelastchapter.account import get_books
 
+from thelastchapter.auth import login_required
+
 bp = Blueprint('list', __name__, url_prefix='/lists')
 
 def check_existence(list_id, book_id):
@@ -17,6 +19,28 @@ def check_existence(list_id, book_id):
     if book is None or book_list is None:
         abort(404)
     return None
+
+def res_format(dbStatus, message, list_id=None):
+    if not list_id:
+        return { 'dbStatus': dbStatus, 'message': message }
+    return { 'dbStatus': dbStatus, 'message': message, 'list_id': list_id }
+
+@bp.route('/create', methods=('POST',))
+@login_required
+def create():
+    name = request.form['name']
+    book_id = request.form['book-id']
+    db = get_db()
+    book = db.execute('SELECT * FROM books WHERE id = ?', (book_id,)).fetchone()
+    if book is None:
+        return res_format('error', 'Book not found')
+    cursor = db.cursor()
+    cursor.execute('INSERT INTO list_names (user_id, name) VALUES( ?, ? )', (g.user['id'], name))
+    list_id = cursor.lastrowid
+    cursor.execute('INSERT INTO book_lists (list_id, book_id) VALUES ( ?, ? )',
+        (list_id, book_id))
+    db.commit()
+    return res_format('success', 'New list successfully created!')
 
 @bp.route('/<int:list_id>')
 def display(list_id):
@@ -69,9 +93,6 @@ def remove(list_id, book_id):
     db.execute('DELETE FROM book_lists WHERE list_id = ? AND book_id = ?', (list_id, book_id))
     db.commit()
     return redirect(url_for('list.display', list_id=list_id))
-
-def res_format(dbStatus, message):
-    return { 'dbStatus': dbStatus, 'message': message }
 
 @bp.route('/<int:list_id>/<int:book_id>/add', methods=("POST",))
 def add(list_id, book_id):
