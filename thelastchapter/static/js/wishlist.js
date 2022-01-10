@@ -13,9 +13,12 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 		const body = document.createElement('p');
 		body.classList.add('popup-body');
 		body.textContent = message;
+		const animate = document.createElement('div');
+		animate.classList.add('remove-timer-animation');
 		container.appendChild(close);
 		container.appendChild(title);
 		container.appendChild(body);
+		container.appendChild(animate);
 		document.querySelector('body').appendChild(container);
 		setTimeout(() => container.remove(), 3000);
 	}
@@ -86,10 +89,12 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 	}
 
 	function handleResetNewListForm() {
-		const list = document.querySelectorAll('[data-expand-new-list="true"]');
-		for (let node of list) {
+		document.querySelectorAll('[data-expand-new-list="true"]').forEach(node=>{
 			node.setAttribute('data-expand-new-list', 'false');
-		}
+		});
+		document.querySelectorAll('.list-search').forEach(input=>{
+			input.textContent = '';
+		});
 	}
 
 	async function handleCreateNewList(e) {
@@ -104,11 +109,12 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 		const res = await handleFetchNewList(url, options);
 		if (res) {
 			console.log(res)
-			const { dbStatus, message } = res;
+			const { dbStatus, message, list_id: listId, list_name: listName } = res;
 			timedPopup(dbStatus, message);
+			addNewListToDisplay(listId, listName);
+			handleResetNewListForm();
 		}
 		e.target.closest('[data-expanded]').setAttribute('data-expanded', 'false');
-		// append newly created list to wishlists on page
 	}
 
 	async function handleFetchNewList(url, options) {
@@ -133,6 +139,38 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 			}
 			next = next.nextElementSibling;
 		}
+	}
+
+	function addNewListToDisplay(listId, listName) {
+		document.querySelectorAll('.wishlist-form').forEach(el => {
+
+			const bookId = el.querySelector('[name="book-id"]').value;
+			const lastEl = el.querySelector('.new-list');
+
+			const container = document.createElement('div');
+			container.classList.add('list-name-container');
+			container.setAttribute('data-hidden', 'false');
+
+			const bookInput = document.createElement('input');
+			bookInput.setAttribute('type', 'hidden');
+			bookInput.setAttribute('name', 'book-id');
+			bookInput.setAttribute('value', bookId);
+
+			const name = document.createElement('span');
+			name.classList.add('list-name');
+			name.textContent = listName;
+
+			const listInput = document.createElement('input');
+			listInput.setAttribute('type', 'hidden');
+			listInput.setAttribute('name', 'list-id');
+			listInput.setAttribute('value', listId);
+
+			container.appendChild(bookInput);
+			container.appendChild(name);
+			container.appendChild(listInput);
+
+			el.insertBefore(container, lastEl);
+		});
 	}
 
 	document.querySelectorAll('[data-expand-new-list]').forEach(form => {

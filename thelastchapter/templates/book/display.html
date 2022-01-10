@@ -14,7 +14,9 @@
         </div>
         <div class="column">
             <h1 class="book-title">{% block title %}{{book.title}}{% endblock %}</h1>
-            <a href="{{ url_for('book.update', id=book.id) }}" class="update-link">Update Book</a>
+            {% if g.user.permissions in g.permissions[g.actions.update_book] %}
+                <a href="{{ url_for('book.update', id=book.id) }}" class="update-link">Update Book</a>
+            {% endif %}
             <h2 class="author">{{book.author}}</h2>
             <span class="price">${{book.price}}</span>
             {% if book.stock and True %}

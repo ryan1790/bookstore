@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 class="list-title">{% block title %}{{book_list[0]}}{% endblock %}</h1>
-    <a class="update-link" href="{{ url_for('list.update', list_id=book_list[1]) }}">Edit Title</a>
-    {% for book in book_list[2] %}
+    <h1 class="list-title">{% block title %}{{list_name}}{% endblock %}</h1>
+    {% if g.user.id == list_owner %}
+        <a class="update-link" href="{{ url_for('list.update', list_id=list_id) }}">Edit Title</a>
+    {% endif %}
+    {% for book in books %}
         <div class="list-card">
-            <a class="list-link" href="{{ url_for('book.display', id=book.id) }}">
+            <a class="list-link" href="{{ url_for('book.display', id=book.book_id) }}">
                 <img src="{{book.image}}" class="list-image">
             </a>
             <div class="list-text-content">
-                <a class="list-link" href="{{ url_for('book.display', id=book.id) }}">
+                <a class="list-link" href="{{ url_for('book.display', id=book.book_id) }}">
                     <h3 class="card-title">{{book.title}}</h3>
                 </a>
                 <h4 class="card-author">{{book.author}}</h4>
@@ -25,10 +27,12 @@
                 {% else %}
                     <div class="unavailable"><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="times-circle" class="svg-inline--fa fa-times-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z"></path></svg> Out of Stock</div>
                 {% endif %}
-                <hr class="remove-divider">
-                <form method="POST" action="{{ url_for('list.remove', list_id=book_list[1], book_id=book.book_id) }}">
-                    <button type="submit" class="remove">Remove from List</button>
-                </form>
+                {% if g.user.id == list_owner %}
+                    <hr class="remove-divider">
+                    <form method="POST" action="{{ url_for('list.remove', list_id=list_id, book_id=book.book_id) }}">
+                        <button type="submit" class="remove">Remove from List</button>
+                    </form>
+                {% endif %}
             </div>
         </div>  
         {% if not loop.last %}

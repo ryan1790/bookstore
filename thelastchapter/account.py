@@ -21,13 +21,14 @@ def get_lists(id):
     return lists
 
 def get_books(list):
+    list_owner = list['user_id']
     db = get_db()
-    books = db.execute('SELECT * from book_lists l JOIN books b ON l.book_id = b.id' +  
+    books = db.execute('SELECT * FROM book_lists l JOIN books b ON l.book_id = b.id' +  
     ' WHERE l.list_id = ?', (list['id'],)).fetchall()
 # SELECT * from book_lists l JOIN books b ON l.book_id = b.id WHERE l.list_id = 1
     if books is None:
         return None
-    return (list['name'], list['id'], books)
+    return (list['name'], list['id'], books, list_owner)
 
 @bp.route('/')
 @login_required
