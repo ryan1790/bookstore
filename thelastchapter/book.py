@@ -5,7 +5,7 @@ from werkzeug.exceptions import abort
 
 from thelastchapter.db import get_db
 
-from thelastchapter.auth import actions, check_permissions
+from thelastchapter.auth import actions, check_permissions, login_required
 
 bp = Blueprint('book', __name__, url_prefix='/books')
 
@@ -23,6 +23,7 @@ def get_lists(user_id):
     return lists
 
 @bp.route('/create', methods=('GET', 'POST'))
+@login_required
 @check_permissions(actions['create_book'])
 def create():
     if request.method == 'POST':
@@ -62,6 +63,7 @@ def display(id):
     return render_template('book/display.html', book=book, lists=lists)
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
+@login_required
 @check_permissions(actions['update_book'])
 def update(id):
     book = get_book(id)
@@ -94,6 +96,7 @@ def update(id):
     return render_template('book/update.html', book=book)
 
 @bp.route('/<int:id>/delete', methods=('POST',))
+@login_required
 @check_permissions(actions['delete_book'])
 def delete(id):
     book = get_book(id)

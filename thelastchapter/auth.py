@@ -96,6 +96,15 @@ def load_logged_in_user():
         g.user = get_db().execute(
             "SELECT * FROM users WHERE id = ?", (user_id,)
         ).fetchone()
+    if g.user:
+        db = get_db()
+        cart_data = db.execute('SELECT book_id FROM carts WHERE user_id = ?', (g.user['id'],)).fetchall()
+        g.cart = [ entry['book_id'] for entry in cart_data ]
+
+@bp.before_app_request
+def load_genres():
+    db = get_db()
+    g.genres = db.execute('SELECT * FROM genres ORDER BY name ASC').fetchall()
         
 @bp.route('/logout')
 def logout():

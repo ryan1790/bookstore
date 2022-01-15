@@ -1,0 +1,15 @@
+{% from 'svgs.html' import xSvg, cartSvg, userSvg %}
+
+{% macro slidemenu(genres) -%}
+    {% if g.user %}
+        <a href="{{ url_for('cart.display') }}" class="slide-menu-top">{{ cartSvg('nav-svg') }} Cart</a>
+    {% else %}
+        <a href="{{ url_for('auth.login') }}" class="slide-menu-top">{{ userSvg('nav-svg') }} Log In</a>
+    {% endif %}
+    <div class="close-slide-menu">{{ xSvg('nav-svg') }}</div>
+    <div class="slide-menu">
+        {% for genre in genres %}
+            <a class="slide-menu-item" href="{{ url_for('home') }}">{{ genre.name }}</a>
+        {% endfor %}
+    </div>
+{%- endmacro %}

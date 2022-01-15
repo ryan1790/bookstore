@@ -11,3 +11,31 @@ document.addEventListener('click', e => {
 		dropdown.classList.remove('active');
 	});
 });
+
+function handleOpen(e) {
+	console.log('here', e.target);
+	const slideMenu = document.querySelector('.slide-menu');
+	const slideTop = document.querySelector('.slide-menu-top');
+	const closeMenu = document.querySelector('.close-slide-menu');
+	slideMenu.setAttribute('data-show-menu', 'true');
+	slideTop.setAttribute('data-show-menu', 'true');
+	closeMenu.setAttribute('data-show-menu', 'true');
+	document.body.setAttribute('data-prevent-scroll', 'true');
+}
+
+function handleClose(e) {
+	console.log('there', e.target);
+	const slideMenu = document.querySelector('.slide-menu');
+	const slideTop = document.querySelector('.slide-menu-top');
+	const closeMenu = document.querySelector('.close-slide-menu');
+	slideMenu.setAttribute('data-show-menu', 'false');
+	slideTop.setAttribute('data-show-menu', 'false');
+	closeMenu.setAttribute('data-show-menu', 'false');
+	document.body.setAttribute('data-prevent-scroll', 'false');
+}
+
+const openSlide = document.querySelector('.open-slide-menu');
+const closeSlide = document.querySelector('.close-slide-menu');
+
+openSlide.addEventListener('click', handleOpen);
+closeSlide.addEventListener('click', handleClose);

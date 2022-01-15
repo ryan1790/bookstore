@@ -59,7 +59,6 @@ def display(list_id):
         flash(error)
         return redirect(url_for('home'))
     list_name, list_id, books, list_owner = book_data
-    print(books[0].keys())
     return render_template('list/display.html', 
         list_name=list_name, 
         list_id=list_id,

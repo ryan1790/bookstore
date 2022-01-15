@@ -26,10 +26,11 @@ def create_app(test_config=None):
     def home():
         return render_template('home.html')
 
-    from thelastchapter import auth, book, book_list, account
+    from thelastchapter import auth, book, book_list, account, cart
     app.register_blueprint(auth.bp)
     app.register_blueprint(account.bp)
     app.register_blueprint(book.bp)
     app.register_blueprint(book_list.bp)
+    app.register_blueprint(cart.bp)
 
     return app

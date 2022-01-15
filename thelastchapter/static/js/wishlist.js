@@ -1,4 +1,4 @@
-if (document.querySelector('[data-wishlist-button]') != null) {
+if (document.querySelector('[data-wishlist-button]') || document.querySelector('.cart')) {
 	function timedPopup(status, message) {
 		const prev = document.querySelector('.popup-container');
 		if (prev) prev.remove();
@@ -22,7 +22,9 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 		document.querySelector('body').appendChild(container);
 		setTimeout(() => container.remove(), 3000);
 	}
+}
 
+if (document.querySelector('[data-wishlist-button]') != null) {
 	async function handleWishSend(e) {
 		if (e.target.matches('span.list-name')) {
 			const options = {
@@ -72,8 +74,10 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 		});
 
 		document.querySelectorAll('[data-expand-new-list="true"]').forEach(newForm => {
-			if (newForm.closest('[data-wishlist-dropdown]') === wishlistDropdown?.closest('[data-wishlist-dropdown'))
-				return;
+			if (wishlistDropdown) {
+				if (newForm.closest('[data-wishlist-dropdown]') === wishlistDropdown.closest('[data-wishlist-dropdown'))
+					return;
+			}
 			newForm.setAttribute('data-expand-new-list', 'false');
 		});
 	}
@@ -89,10 +93,10 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 	}
 
 	function handleResetNewListForm() {
-		document.querySelectorAll('[data-expand-new-list="true"]').forEach(node=>{
+		document.querySelectorAll('[data-expand-new-list="true"]').forEach(node => {
 			node.setAttribute('data-expand-new-list', 'false');
 		});
-		document.querySelectorAll('.list-search').forEach(input=>{
+		document.querySelectorAll('.list-search').forEach(input => {
 			input.textContent = '';
 		});
 	}
@@ -108,7 +112,7 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 		const url = '/lists/create';
 		const res = await handleFetchNewList(url, options);
 		if (res) {
-			console.log(res)
+			console.log(res);
 			const { dbStatus, message, list_id: listId, list_name: listName } = res;
 			timedPopup(dbStatus, message);
 			addNewListToDisplay(listId, listName);
@@ -130,20 +134,20 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 	function handleSearch(e) {
 		const filter = e.target.value.toLowerCase();
 		console.log(filter);
-		let next = e.target.nextElementSibling
-		while (next?.matches('.list-name-container')) {
+		let next = e.target.nextElementSibling;
+		while (next.matches('.list-name-container')) {
 			if (!next.textContent.toLowerCase().includes(filter)) {
 				next.setAttribute('data-hidden', 'true');
 			} else {
 				next.setAttribute('data-hidden', 'false');
 			}
 			next = next.nextElementSibling;
+			if (next == null) break;
 		}
 	}
 
 	function addNewListToDisplay(listId, listName) {
 		document.querySelectorAll('.wishlist-form').forEach(el => {
-
 			const bookId = el.querySelector('[name="book-id"]').value;
 			const lastEl = el.querySelector('.new-list');
 

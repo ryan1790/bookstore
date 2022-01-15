@@ -1,24 +1,33 @@
 <!doctype html>
+{% from 'svgs.html' import  bookSvg, cartSvg, userSvg, searchSvg, menuSvg %}
+{% from 'slideMenu.html' import slidemenu %}
 <html>
 <head>
     <title>{% block title %} {% endblock %} - TLC</title>
     <script src="{{ url_for('static', filename='js/navbar.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/scrollButtons.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/wishlist.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/cart.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/updateCost.js') }}" defer></script>
     <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static', filename='svgs/book-solid.svg') }}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Waterfall&display=swap" rel="stylesheet">
 </head>
-<body>
+<body data-prevent-scroll="false">
     <div class="page-container">
         <nav class="navbar">
-            <div class="logo-title">
-                <img id="nav-logo" class="nav-svg" src="{{ url_for('static', filename='svgs/book-solid.svg') }}">
-                <span class="nav-title">The Last Chapter</span>
+            <a href="{{ url_for('home') }}" class="link">
+                <div class="logo-title">
+                    {{bookSvg("nav-svg", "nav-logo")}}
+                    <span class="nav-title">The Last Chapter</span>
+                </div>
+            </a>
+            <div class="responsive-flex">
+                <input type="text" class="nav-search" placeholder="Search">
+                {{ menuSvg("nav-svg open-slide-menu") }}
             </div>
-            <input type="text" class="nav-search" placeholder="Search">
             <ul class="nav-list">
                 <li class="nav-item">
                     <div class="dropdown" data-dropdown>
@@ -75,8 +84,8 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="link" href="#">
-                        <img class="nav-svg nav-cart" src="{{ url_for('static', filename='svgs/shopping-cart-solid.svg') }}">
+                    <a class="link" href="{{ url_for('cart.display') }}">
+                        {{ cartSvg("nav-svg nav-cart") }}
                     </a>
                 </li>
                 <li class="nav-item">
@@ -106,6 +115,7 @@
         </nav>
     
         <section class="content">
+            {{ slidemenu(g.genres) }}
             {% for message in get_flashed_messages() %}
                 <div class="flash">{{ message }}</div>
             {% endfor %}

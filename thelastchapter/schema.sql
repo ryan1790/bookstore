@@ -23,6 +23,7 @@ CREATE TABLE books (
     lang TEXT NOT NULL,
     pages INTEGER,
     -- isbn TEXT NOT NULL,
+    -- stock INTEGER NOT NULL,
     price TEXT NOT NULL
 );
 
@@ -48,4 +49,9 @@ CREATE TABLE book_lists (
 --     quantity INTEGER DEFAULT 1,
 --     FOREIGN KEY (user_id) REFERENCES users (id),
 --     FOREIGN KEY (book_id) REFERENCES books (id)
+-- );
+
+-- CREATE TABLE genres (
+--     id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     name TEXT NOT NULL
 -- );
