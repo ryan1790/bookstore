@@ -32,7 +32,7 @@ if (document.querySelector('.cart')) {
 		}
 	}
 
-	document.querySelectorAll('.cart').forEach(button => {
+	document.querySelectorAll('[data-book-id]').forEach(button => {
 		button.addEventListener('click', handleClick);
 	});
 }

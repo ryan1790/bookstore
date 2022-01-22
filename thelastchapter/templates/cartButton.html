@@ -1,17 +1,20 @@
 {% from 'svgs.html' import cartSvg, cartplusSvg %}
 
 {% macro cartbutton(book_id, stock, in_cart) -%}
-    {% if in_cart %}
-        <a href="{{ url_for('cart.display') }}" class="cart cart-link">
-            {{ cartSvg() }} <span class="button-text">In Cart</span>
-        </a>
-        
+    {% if g.user %}
+        {% if in_cart %}
+            <a href="{{ url_for('cart.display') }}" class="cart cart-link">
+                {{ cartSvg() }} <span class="button-text">In Cart</span>
+            </a>
+        {% else %}
+            <button class="cart" data-book-id="{{book_id}}" {{ '' if stock else 'disabled' }}>
+                {{cartplusSvg()}} <span class="button-text">Add to Cart</span>
+            </button>
+            <a hidden href="{{ url_for('cart.display') }}" class="cart cart-link">
+                {{cartSvg()}} <span class="button-text">In Cart</span>
+            </a>
+        {% endif %}
     {% else %}
-        <button class="cart" data-book-id="{{book_id}}" {{ '' if stock else 'disabled' }}>
-            {{cartplusSvg()}} <span class="button-text">Add to Cart</span>
-        </button>
-        <a hidden href="{{ url_for('cart.display') }}" class="cart cart-link">
-            {{cartSvg()}} <span class="button-text">In Cart</span>
-        </a>
+    <a href="{{ url_for('auth.login') }}" class="cart cart-link">{{ cartplusSvg() }}Add to Cart</a>
     {% endif %}
 {%- endmacro %}

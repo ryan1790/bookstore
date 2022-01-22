@@ -3,6 +3,7 @@
 
 {% block content %}
     <h1 class="main-title">My {% block title %}Account{% endblock %}</h1>
+    <a class="update-button" href="{{ url_for('account.update') }}">Update Account</a>
     <h3 class="sub-title">My Orders</h3>
     <div>
         Orders go here!

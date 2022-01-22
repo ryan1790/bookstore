@@ -15,7 +15,7 @@ def get_cart():
     db = get_db()
     cart = db.execute(
         'SELECT b.id AS book_id, b.title AS title, b.author AS author,' 
-        ' b.image AS image, b.price AS price, c.quantity AS quantity' 
+        ' b.image AS image, b.price AS price, c.quantity AS quantity, b.stock as stock' 
         ' FROM carts c JOIN books b ON c.book_id = b.id' 
         ' WHERE c.user_id = ? ORDER BY c.id ASC', (g.user['id'],)
     ).fetchall()

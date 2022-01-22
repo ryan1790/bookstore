@@ -13,7 +13,13 @@
             <label for="published" class="form-label">Date Published: </label>
             <input id="published" value="{{book.published}}" name="published" type="date" class="text-input">
             <label for="genre" class="form-label">Genre: </label>
-            <input required id="genre" value="{{book.genre}}" name="genre" type="text" class="text-input">
+            <div class="custom-select">
+                <select required id="genre" value="{{book.genre}}" name="genre" type="select" class="select-dropdown">
+                    {% for genre in g.genres %}
+                        <option {{ 'selected ' if genre.id == book.genre_id else '' }}value="{{ genre.id }}">{{ genre.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <label for="info" class="form-label">Description: </label>
             <textarea required id="info" name="info" class="text-input">{{book.info}}</textarea>
             <label for="lang" class="form-label">Language: </label>
@@ -23,7 +29,9 @@
             <label for="isbn" class="form-label">ISBN: </label>
             <input required id="isbn" value="{{book.isbn}}" name="isbn" type="text" class="text-input">
             <label for="price" class="form-label">Price: </label>
-            <input required id="price" value="{{book.price}}" name="price" type="text" class="text-input">
+            <label for="stock" class="form-label">Stock: </label>
+            <input type="number" name="stock" id="stock" class="text-input" value="{{book.stock}}" min="0">
+            <input required id="price" value="{{book.price}}" name="price" step=".01" type="number" class="text-input" min="0">
             <button class="login" type="submit">Update Book</button>
         </form>
         <form method="POST" action="{{ url_for('book.delete', id=book.id) }}">

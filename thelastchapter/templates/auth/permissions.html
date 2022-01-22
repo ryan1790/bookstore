@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="form-title">Update {% block title %}Roles{% endblock %}</h1>
+<div class="form-container">
+    <form class="main-form" method="POST" action="{{ url_for('auth.update_permissions') }}">
+        <label class="form-label" for="email">Email of User:</label>
+        <input name="email" required type="email" id="email" class="text-input">
+        <label class="form-label" for="role">New Role:</label>
+        <div class="custom-select">
+            <select name="role" required id="role">
+                {% for role in roles %}
+                    <option value="{{role}}" {{' selected' if role=="USER" else ''}}>{{ role[0]|upper + role[1:]|lower }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="login">Update</button>
+    </form>
+</div>
+{% endblock %}

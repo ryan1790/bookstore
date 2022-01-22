@@ -34,8 +34,16 @@ function handleClose(e) {
 	document.body.setAttribute('data-prevent-scroll', 'false');
 }
 
+function handleSearch(e) {
+	if (e.keyCode !== 13) return;
+	query = search.value;
+	window.location.href = `/search?query=${query}`;
+}
+
 const openSlide = document.querySelector('.open-slide-menu');
 const closeSlide = document.querySelector('.close-slide-menu');
+const search = document.querySelector('#search');
 
 openSlide.addEventListener('click', handleOpen);
 closeSlide.addEventListener('click', handleClose);
+search.addEventListener('keyup', handleSearch);

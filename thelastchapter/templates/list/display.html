@@ -18,7 +18,7 @@
                 </a>
                 <h4 class="card-author">{{book.author}}</h4>
                 <p class="price">{{book.price}}</p>
-                {% if book.stock or true %}
+                {% if book.stock %}
                     <div class="available">
                         {{checkSvg()}}
                         Available

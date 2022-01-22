@@ -5,7 +5,14 @@
 {% block content %}
 
 <div class="banner"><img class="banner-image" src="{{ url_for('static', filename='janko-ferlic-sfL_QOnmy00-unsplash.jpg') }}"></div>
-{{booklist('Favorite Books of 3024', none)}}
-{{booklist('Worst Books of 3023', none)}}
+{% if g.user.permissions in g.permissions[g.actions.update_home_list] %}
+    <div class="update-container">
+        <a class="update-button" href="{{ url_for('list.update_display') }}">Update Displayed Lists</a>
+    </div>
+{% endif %}
+{% for entry in lists %}
+    {% set name, list_id, books, owner_id = entry %}
+    {{ booklist(name, list_id, books)}}
+{% endfor %}
 
 {% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="form-title">{% block title %}Update Display{% endblock %}</h1>
+
+    <div class="form-container">
+        {% if lists|length == 0 %}
+            <div class="section-header">
+                No lists displayed currently! Select a list to add it to the home page.
+            </div>
+        {% else %}
+            <div class="section-header">Currently Displayed Lists:</div>
+            {% for entry in lists %} 
+                <div class="list-entry">
+                    <a href="{{ url_for('list.display', list_id=entry.id) }}" class="list-display-link">{{entry.name}}</a>
+                    <form class="update-display-form" action="{{ url_for('list.home_remove', list_id=entry.id) }}" method="POST">
+                        <button class="remove-button" type="submit">REMOVE</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <hr class="update-divider">
+        {% if user_lists|length == 0 %}
+            <div class="section-header">
+                You currently have no lists! Create one to add it to the home display.
+            </div>
+        {% else %}
+            <div class="section-header">Your lists:</div>
+            {% for entry in user_lists %}
+                <div class="list-entry">
+                    <a href="{{ url_for('list.display', list_id=entry.id) }}" class="list-display-link">{{entry.name}}</a>
+                    <form class="update-display-form" action="{{ url_for('list.home_add', list_id=entry.id) }}" method="POST">
+                        <button {{ 'disabled' if entry.id in used else '' }} class="add-button" type="submit">DISPLAY</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

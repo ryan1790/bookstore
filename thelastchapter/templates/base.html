@@ -25,7 +25,7 @@
                 </div>
             </a>
             <div class="responsive-flex">
-                <input type="text" class="nav-search" placeholder="Search">
+                <input type="text" id="search" class="nav-search" placeholder="Search by Title, Author, or ISBN">
                 {{ menuSvg("nav-svg open-slide-menu") }}
             </div>
             <ul class="nav-list">
@@ -34,51 +34,9 @@
                         <span class="link" data-dropdown-button>Genres</span>
                         <div class="dropdown-menu genres-dropdown-menu">
                             <ul class="genres-list">
-                                <div class="column">
-                                    <li class="genre"><a href="">Action and Adventure</a></li>
-                                    <li class="genre"><a href="">Art/Architecture</a></li>
-                                    <li class="genre"><a href="">Autobiography</a></li>
-                                    <li class="genre"><a href="">Biography</a></li>
-                                    <li class="genre"><a href="">Business/Economics</a></li>
-                                    <li class="genre"><a href="">Children's Books</a></li>
-                                    <li class="genre"><a href="">Crafts/Hobbies</a></li>
-                                    <li class="genre"><a href="">Classics</a></li>
-                                    <li class="genre"><a href="">Cookbooks</a></li>
-                                    <li class="genre"><a href="">Comics</a></li>
-                                    <li class="genre"><a href="">Coming-of-age</a></li>
-                                    <li class="genre"><a href="">Crime</a></li>
-                                    <li class="genre"><a href="">Drama</a></li>
-                                </div>
-                                <div class="column">
-                                    <li class="genre"><a href="">Health/Fitness</a></li>
-                                    <li class="genre"><a href="">Fantasy</a></li>
-                                    <li class="genre"><a href="">History</a></li>
-                                    <li class="genre"><a href="">Graphic Novels</a></li>
-                                    <li class="genre"><a href="">Home and Garden</a></li>
-                                    <li class="genre"><a href="">Historical Fiction</a></li>
-                                    <li class="genre"><a href="">Humor</a></li>
-                                    <li class="genre"><a href="">Horror</a></li>
-                                    <li class="genre"><a href="">LGBTQ+</a></li>
-                                    <li class="genre"><a href="">Mystery</a></li>
-                                    <li class="genre"><a href="">Philosophy</a></li>
-                                    <li class="genre"><a href="">Poetry</a></li>
-                                    <li class="genre"><a href="">Religion</a></li>
-                                </div>
-                                <div class="column">
-                                    <li class="genre"><a href="">Romance</a></li>
-                                    <li class="genre"><a href="">Satire</a></li>
-                                    <li class="genre"><a href="">True Crime</a></li>
-                                    <li class="genre"><a href="">Science Fiction</a></li>
-                                    <li class="genre"><a href="">Short Stories</a></li>
-                                    <li class="genre"><a href="">Science & Technology</a></li>
-                                    <li class="genre"><a href="">Suspense</a></li>
-                                    <li class="genre"><a href="">Self Help</a></li>
-                                    <li class="genre"><a href="">Thriller</a></li>
-                                    <li class="genre"><a href="">Sports and Leisure</a></li>
-                                    <li class="genre"><a href="">Travel</a></li>
-                                    <li class="genre"><a href="">Young adult</a></li>
-                                    <li class="genre"><a href="">True Crime</a></li>
-                                </div>
+                                {% for genre in g.genres %}
+                                    <li class="genre"><a href="{{ url_for('category.display', genre_id=genre.id) }}">{{ genre.name }}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>

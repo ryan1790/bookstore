@@ -8,8 +8,14 @@
     {% endif %}
     <div class="close-slide-menu">{{ xSvg('nav-svg') }}</div>
     <div class="slide-menu">
+        {% if g.user %}
+            <a class="slide-menu-item" href="{{ url_for('account.display') }}">{{ userSvg('nav-svg') }} Account</a>
+        {% endif %}
+        {% if g.user.permissions in g.permissions[g.actions.create_book] %}
+            <a class="slide-menu-item" href="{{ url_for('book.create') }}"> New Book</a>
+        {% endif %}
         {% for genre in genres %}
-            <a class="slide-menu-item" href="{{ url_for('home') }}">{{ genre.name }}</a>
+            <a class="slide-menu-item" href="{{ url_for('category.display', genre_id=genre.id) }}">{{ genre.name }}</a>
         {% endfor %}
     </div>
 {%- endmacro %}

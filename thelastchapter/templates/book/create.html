@@ -13,7 +13,13 @@
             <label for="published" class="form-label">Date Published: </label>
             <input id="published" name="published" type="date" class="text-input">
             <label for="genre" class="form-label">Genre: </label>
-            <input required id="genre" name="genre" type="text" class="text-input">
+            <div class="custom-select">
+                <select required id="genre" name="genre" type="text">
+                    {% for genre in g.genres %}
+                        <option value="{{ genre.id }}">{{ genre.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <label for="info" class="form-label">Description: </label>
             <textarea required id="info" name="info" class="text-input"></textarea>
             <label for="lang" class="form-label">Language: </label>
@@ -22,8 +28,10 @@
             <input id="pages" name="pages" type="text" class="text-input">
             <label for="isbn" class="form-label">ISBN: </label>
             <input required id="isbn" name="isbn" type="text" class="text-input">
+            <label for="stock" class="form-label">Stock: </label>
+            <input type="number" name="stock" class="text-input" step=".01" id="stock" min="0">
             <label for="price" class="form-label">Price: </label>
-            <input required id="price" name="price" type="number" min="0" step=".01" class="text-input">
+            <input required id="price" name="price" type="number" min="0" class="text-input">
             <button class="login">Create Book</button>
         </form>
     </div>

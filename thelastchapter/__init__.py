@@ -1,7 +1,6 @@
 from flask import Flask, render_template
 import os
-
-from thelastchapter import book_list
+from thelastchapter.book_list import get_full_displayed_lists
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -24,13 +23,16 @@ def create_app(test_config=None):
 
     @app.route('/')
     def home():
-        return render_template('home.html')
+        lists = get_full_displayed_lists()
+        return render_template('home.html', lists=lists)
 
-    from thelastchapter import auth, book, book_list, account, cart
+    from thelastchapter import auth, book, book_list, account, cart, category
     app.register_blueprint(auth.bp)
     app.register_blueprint(account.bp)
     app.register_blueprint(book.bp)
     app.register_blueprint(book_list.bp)
     app.register_blueprint(cart.bp)
+    app.register_blueprint(category.bp)
+    app.add_url_rule('/search', 'search', category.search)
 
     return app

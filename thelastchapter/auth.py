@@ -10,6 +10,8 @@ from thelastchapter.db import get_db
 
 bp = Blueprint('auth', __name__)
 
+roles = ( 'ADMIN', 'EDITOR', 'USER' )
+
 permissions = {
     'ALTER_USER_PERMISSIONS': ('ADMIN',),
     'BOOK_CREATE': ('ADMIN', 'EDITOR'),
@@ -25,6 +27,47 @@ actions = {
     'delete_book': 'BOOK_DELETE',
     'update_home_list': 'HOME_LISTS_UPDATE',
 }
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            flash('Must be logged in to access')
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+    return wrapped_view
+
+def check_permissions(action):
+    def decorator_permissions(view):
+        @functools.wraps(view)
+        def wrapped_view(**kwargs):
+            if (g.user['permissions'] not in permissions[action]):
+                flash('You are not authorized to do that')
+                return redirect(url_for('home'))
+            return view(**kwargs)
+        return wrapped_view
+    return decorator_permissions
+
+def check_list_ownership(list_id, AJAX=False):
+    db = get_db()
+    list_data = db.execute('SELECT * FROM list_names WHERE id = ?', (list_id,)).fetchone()
+    if list_data is None:
+        flash('List not found')
+        return None
+    if (g.user['id'] != list_data['user_id']):
+        if not AJAX:
+            flash('You are not authorized to do that')
+            return None
+        else:
+            error = {
+                'dbStatus': 'error',
+                'message': 'Unauthorized access'
+            }
+            return (False, error)
+    if not AJAX:
+        return list_data
+    else:
+        return (True, list_data)
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
@@ -111,43 +154,20 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            flash('Must be logged in to access')
-            return redirect(url_for('auth.login'))
-        return view(**kwargs)
-    return wrapped_view
-
-def check_permissions(action):
-    def decorator_permissions(view):
-        @functools.wraps(view)
-        def wrapped_view(**kwargs):
-            if (g.user['permissions'] not in permissions[action]):
-                flash('You are not authorized to do that')
-                return redirect(url_for('home'))
-            return view(**kwargs)
-        return wrapped_view
-    return decorator_permissions
-
-def check_list_ownership(list_id, AJAX=False):
-    db = get_db()
-    list_data = db.execute('SELECT * FROM list_names WHERE id = ?', (list_id,)).fetchone()
-    if list_data is None:
-        flash('List not found')
-        return None
-    if (g.user['id'] != list_data['user_id']):
-        if not AJAX:
-            flash('You are not authorized to do that')
-            return None
-        else:
-            error = {
-                'dbStatus': 'error',
-                'message': 'Unauthorized access'
-            }
-            return (False, error)
-    if not AJAX:
-        return list_data
-    else:
-        return (True, list_data)
+@bp.route('/permissions', methods=('GET', 'POST'))
+@login_required
+@check_permissions(actions['alter_user_permissions'])
+def update_permissions():
+    if request.method == 'POST':
+        db = get_db()
+        email = request.form['email']
+        role = request.form['role']
+        user = db.execute('SELECT id FROM users WHERE email = ?', (email,)).fetchone()
+        if user is None:
+            flash('User not found')
+            return redirect(url_for('auth.update_permissions'))
+        db.execute('UPDATE users SET permissions = ? WHERE id = ?', (role, user['id']))
+        db.commit()
+        flash("User's permissions updated")
+        return redirect(url_for('auth.update_permissions'))
+    return render_template('auth/permissions.html', roles=roles)

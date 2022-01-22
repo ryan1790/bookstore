@@ -1,35 +1,36 @@
 {%- macro wishlist(user_id, lists, book_id) %}
-
-<div data-expanded="false" class="wishlist" >
-    <div data-wishlist-button>
-        <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="bookmark" class="svg-inline--fa fa-bookmark fa-w-12" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-            <path fill="currentColor" d="M336 0H48C21.49 0 0 21.49 0 48v464l192-112 192 112V48c0-26.51-21.49-48-48-48zm0 428.43l-144-84-144 84V54a6 6 0 0 1 6-6h276c3.314 0 6 2.683 6 5.996V428.43z"></path>
-        </svg>
-        <span class="button-text">Add to Wishlist</span>
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-down" class="svg-inline--fa fa-angle-down fa-w-10" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-            <path fill="currentColor" d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
-        </svg>
-    </div>
-    <div data-wishlist-dropdown class="wishlist-form">
-        <input type="text" class="list-search" placeholder="Search for list">
-        {% for wishlist in lists %}
-            <div data-hidden="false" class="list-name-container">
-                <input name="book-id" type="hidden" value="{{book_id}}">
-                <span class="list-name">{{wishlist.name}}</span>
-                <input name="list-id" type="hidden" value="{{wishlist.id}}">
+{% from 'svgs.html' import downarrowSvg, bookmarkSvg %}
+{% if g.user %}
+<span class="wishlist-positioning">
+    <div data-expanded="false" class="wishlist" >
+        <div data-wishlist-button>
+            {{ bookmarkSvg() }}
+            <span class="button-text">Add to Wishlist</span>
+            {{ downarrowSvg() }}
+        </div>
+        <div data-wishlist-dropdown class="wishlist-form">
+            <input type="text" class="list-search" placeholder="Search for list">
+            {% for wishlist in lists %}
+                <div data-hidden="false" class="list-name-container">
+                    <input name="book-id" type="hidden" value="{{book_id}}">
+                    <span class="list-name">{{wishlist.name}}</span>
+                    <input name="list-id" type="hidden" value="{{wishlist.id}}">
+                </div>
+            {% endfor %}
+            <div data-expand-new-list="false" class="new-list">
+                + New Wishlist
             </div>
-        {% endfor %}
-        <div data-expand-new-list="false" class="new-list">
-            + New Wishlist
-        </div>
-        <div class="new-list-form" data-new-list>
-            <form class="create-list-form" action="#">
-                <input name='name' class="new-list-input" type="text" placeholder="Enter list name">
-                <input name="book-id" type="hidden" value="{{book_id}}">
-                <button class="login new-list-button">Confirm</button>
-            </form>
+            <div class="new-list-form" data-new-list>
+                <form class="create-list-form" action="#">
+                    <input name='name' class="new-list-input" type="text" placeholder="Enter list name">
+                    <input name="book-id" type="hidden" value="{{book_id}}">
+                    <button class="login new-list-button">Confirm</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
+</span>
+{% else %}
+<a href="{{ url_for('auth.login') }}" class="cart cart-link">Add to Wishlist {{ bookmarkSvg() }}</a>
+{% endif %}
 {%- endmacro %}

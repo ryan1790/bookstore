@@ -1,0 +1,43 @@
+{% macro pagination(curP, lastP, route) -%}
+    <div class="pagination">
+        {% if 'genre_id' in kwargs %}
+            {% if lastP <= 7 %}
+                {% for x in range(lastP) %}
+                    <a href="{{ url_for(route, genre_id=kwargs['genre_id'], page=x+1) }}" class="page-button {{ 'selected' if x + 1 == curP else '' }}">{{ x+1 }}</a>
+                {% endfor %}
+            {% elif curP - 3 <= 0 %}
+                {% for x in range(7) %}
+                    <a href="{{ url_for(route, genre_id=kwargs['genre_id'], page=x+1) }}" class="page-button {{ 'selected' if x + 1 == curP else '' }}">{{ x+1 }}</a>
+                {% endfor %}
+            {% elif curP + 3 > lastP %}
+                {% for x in range(lastP - 6, lastP + 1) %}
+                    <a href="{{ url_for(route, genre_id=kwargs['genre_id'], page=x) }}" class="page-button {{ 'selected' if x == curP else '' }}">{{ x }}</a>
+                {% endfor %}
+            {% else %}
+                {% for x in range(curP - 3, curP + 4) %}
+                    <a href="{{ url_for(route, genre_id=kwargs['genre_id'], page=x+1) }}" class="page-button {{ 'selected' if x == curP else '' }}">{{ x }}</a>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+
+        {% if 'query' in kwargs %}
+            {% if lastP <= 7 %}
+            {% for x in range(lastP) %}
+                <a href="{{ url_for(route, query=kwargs['query'], page=x+1) }}" class="page-button {{ 'selected' if x + 1 == curP else '' }}">{{ x+1 }}</a>
+            {% endfor %}
+            {% elif curP - 3 <= 0 %}
+                {% for x in range(7) %}
+                    <a href="{{ url_for(route, query=kwargs['query'], page=x+1) }}" class="page-button {{ 'selected' if x + 1 == curP else '' }}">{{ x+1 }}</a>
+                {% endfor %}
+            {% elif curP + 3 > lastP %}
+                {% for x in range(lastP - 6, lastP + 1) %}
+                    <a href="{{ url_for(route, query=kwargs['query'], page=x) }}" class="page-button {{ 'selected' if x == curP else '' }}">{{ x }}</a>
+                {% endfor %}
+            {% else %}
+                {% for x in range(curP - 3, curP + 4) %}
+                    <a href="{{ url_for(route, query=kwargs['query'], page=x+1) }}" class="page-button {{ 'selected' if x == curP else '' }}">{{ x }}</a>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+    </div>
+{%- endmacro %}

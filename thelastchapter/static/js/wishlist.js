@@ -22,6 +22,14 @@ if (document.querySelector('[data-wishlist-button]') || document.querySelector('
 		document.querySelector('body').appendChild(container);
 		setTimeout(() => container.remove(), 3000);
 	}
+
+	function handleClose(e) {
+		if (e.target.matches('.popup-close')) {
+			document.querySelector('.popup-container').remove();
+		}
+	}
+
+	document.addEventListener('click', handleClose);
 }
 
 if (document.querySelector('[data-wishlist-button]') != null) {
@@ -80,12 +88,6 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 			}
 			newForm.setAttribute('data-expand-new-list', 'false');
 		});
-	}
-
-	function handleClose(e) {
-		if (e.target.matches('.popup-close')) {
-			document.querySelector('.popup-container').remove();
-		}
 	}
 
 	function handleNewListForm(e) {
@@ -192,5 +194,4 @@ if (document.querySelector('[data-wishlist-button]') != null) {
 
 	document.addEventListener('click', handleWishExpand);
 	document.addEventListener('click', handleWishSend);
-	document.addEventListener('click', handleClose);
 }
