@@ -2,7 +2,10 @@
 {% from 'svgs.html' import checkSvg, xSvg %}
 
 {% block content %} 
-    <h1 class="list-title">{% block title %}Shopping Cart{% endblock %}</h1>
+    <h1 class="form-title">{% block title %}Shopping Cart{% endblock %}</h1>
+    {% if cart|length == 0 %}
+    <h4 class="sub-title">Nothing in cart yet! Try adding some books!</h4>
+    {% else %}
     <div class="cart-container">
         <div class="title">Book</div>
         <div class="title">Info</div>
@@ -51,4 +54,5 @@
         <button type="submit" formaction="{{ url_for('cart.update', checkout='False') }}" class="cart-update-button">UPDATE</button>
         <button type="submit" formaction="{{ url_for('cart.update', checkout='True') }}" class="cart-checkout-button">CHECKOUT</button>
     </form>
+    {% endif %}
 {% endblock %}

@@ -4,16 +4,25 @@
 {% block content %}
     <h1 class="main-title">My {% block title %}Account{% endblock %}</h1>
     <a class="update-button" href="{{ url_for('account.update') }}">Update Account</a>
-    <h3 class="sub-title">My Orders</h3>
-    <div>
-        Orders go here!
-    </div>
+    {% if orders|length > 0 %}
+        <h3 class="sub-title">My Orders</h3>
+        <div class="orders-container">
+            {% for order in orders %}
+            <a class="order" href="{{ url_for('account.display_order', order_id=order.id) }}">{{order.date}}</a>
+            {% endfor %}
+        </div>
+    {% endif %}
     <h3 class="sub-title">View Cart</h3>
-    <div>
-        Display cart items here!
-    </div>
+    {% if cart|length > 0 %}
+        <div>
+            {{ booklist('In Cart', none, cart) }}
+        </div>
+    {% else %}
+        <h5>Nothing in cart yet! Try adding some books!</h5>
+    {% endif %}
     <h3 class="sub-title">View Wishlists</h3>
-    {% for books in lists %}
-        {{booklist(books[0], books[1], books[2])}}
+    {% for entry in lists %}
+        {% set title, list_id, books, _ = entry %}
+        {{ booklist(title, list_id, books) }}
     {% endfor %}
 {% endblock %}

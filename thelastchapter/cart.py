@@ -1,27 +1,20 @@
 from flask import ( 
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, Response
 )
 from werkzeug.exceptions import abort
-
 from thelastchapter.db import get_db
-
 from thelastchapter.auth import actions, check_permissions, login_required
-
-from thelastchapter.book_list import res_format
+from thelastchapter.utilities import (
+    res_format, get_cart, STATES, get_order_details, get_payment_intent
+)
+from dotenv import dotenv_values
+import stripe
 
 bp = Blueprint('cart', __name__, url_prefix='/cart')
-
-def get_cart():
-    db = get_db()
-    cart = db.execute(
-        'SELECT b.id AS book_id, b.title AS title, b.author AS author,' 
-        ' b.image AS image, b.price AS price, c.quantity AS quantity, b.stock as stock' 
-        ' FROM carts c JOIN books b ON c.book_id = b.id' 
-        ' WHERE c.user_id = ? ORDER BY c.id ASC', (g.user['id'],)
-    ).fetchall()
-    if cart is None:
-        return []
-    return cart
+config = dotenv_values('.env')
+stripe.api_key = config['STRIPE_SECRET']
+stripe_key = config['STRIPE_KEY']
+webhook_secret=config['WEBHOOK_SECRET']
 
 def check_in_cart(book_id):
     db = get_db()
@@ -31,13 +24,29 @@ def check_in_cart(book_id):
     ).fetchone()
     return book
 
+def cart_to_order(pi_id, address_id):
+    cart = get_cart()
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        'INSERT INTO orders (user_id, address_id, payment_id) VALUES (?, ?, ?)',
+        (g.user['id'], address_id, pi_id)
+    )
+    order_id = cur.lastrowid
+    for b in cart:
+        db.execute(
+            'INSERT INTO order_books (order_id, book_id, quantity, price)'
+            ' VALUES (?, ?, ?, ?)', (order_id, b['book_id'], b['quantity'], b['price'])
+        )
+        db.execute('DELETE FROM carts WHERE id = ?', (b['id'],))
+    db.commit()
+    return get_order_details(order_id)
+
 @bp.route('/')
 @login_required
 def display():
-    print(g.cart)
-    cart = get_cart()
-    total = round(sum([ float(book['price']) * float(book['quantity']) for book in cart ]), 2)
-    display = "{:,.2f}".format(total)
+    _, cart, total, _ = get_payment_intent()
+    display = "{:,.2f}".format(total/100)
     return render_template('cart/display.html', cart=cart, total=display)
 
 @bp.route('/update/<checkout>', methods=('POST',))
@@ -59,9 +68,65 @@ def update(checkout):
             )
     db.commit()
     if checkout == "True":
-        return redirect(url_for('cart.display'))
+        return redirect(url_for('address.add_address'))
     else:
         return redirect(url_for('cart.display'))
+
+@bp.route('/checkout')
+@login_required
+def checkout():
+    client_secret, cart, total, address = get_payment_intent()
+
+    return render_template( 'cart/checkout.html', 
+        client_secret=client_secret, 
+        cart=cart, 
+        total=total, 
+        address=address,
+        stripe_key=stripe_key
+    )
+
+@bp.route('/checkout/status')
+@login_required
+def status():
+    args = request.args
+    # if 'payment_intent_client_secret' not in args and 'payment_intent' not in args:
+    #     return redirect(url_for('cart.display'))
+    client_secret = args['payment_intent_client_secret']
+    pi_id = args['payment_intent']
+    intent = stripe.PaymentIntent.retrieve(pi_id)
+    if intent is None or intent['status'] != 'succeeded':
+        return redirect(url_for('cart.display'))
+    total = intent['amount']
+    order_data, order, address = cart_to_order(pi_id, intent.metadata['a_id']) # double check this
+    session['intent_id'] = None
+    return render_template(
+        'cart/status.html', 
+        order_data=order_data,
+        order=order,
+        address=address,
+        total=total,
+        client_secret=client_secret
+    )
+
+def my_webhook_view():
+    payload = request.get_data(as_text='true')
+    if 'STRIPE_SIGNATURE' not in request.headers:
+        return Response(status=400)
+    sig_header = request.headers['STRIPE_SIGNATURE']
+    event = None
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        return Response(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return Response(status=400)
+    # Passed signature verification
+    return Response(status=200)
+
 
 @bp.route('/<int:book_id>/add', methods=('POST',))
 @login_required
@@ -100,5 +165,3 @@ def remove(book_id):
         )
         db.commit()
     return redirect(url_for('cart.display'))
-
-

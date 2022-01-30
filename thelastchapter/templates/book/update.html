@@ -3,7 +3,7 @@
 {% block content %}
     <h1 class="form-title">{% block title %}Update {{book.title}}{% endblock %}</h1>
     <div class="form-container">
-        <form class="main-form" method="POST" action="{{ url_for('book.create') }}">
+        <form class="main-form" method="POST" action="{{ url_for('book.update', id=book.id) }}">
             <label for="title" class="form-label">Title: </label>
             <input required id="title" name="title" type="text" class="text-input" value="{{book.title}}">
             <label for="author" class="form-label">Author: </label>
@@ -28,9 +28,9 @@
             <input id="pages" name="pages" value="{{book.pages}}" type="text" class="text-input">
             <label for="isbn" class="form-label">ISBN: </label>
             <input required id="isbn" value="{{book.isbn}}" name="isbn" type="text" class="text-input">
-            <label for="price" class="form-label">Price: </label>
             <label for="stock" class="form-label">Stock: </label>
-            <input type="number" name="stock" id="stock" class="text-input" value="{{book.stock}}" min="0">
+            <input type="number" name="stock" id="stock" class="text-input" step="1" value="{{book.stock}}" min="0">
+            <label for="price" class="form-label">Price: </label>
             <input required id="price" value="{{book.price}}" name="price" step=".01" type="number" class="text-input" min="0">
             <button class="login" type="submit">Update Book</button>
         </form>

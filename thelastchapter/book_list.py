@@ -1,40 +1,16 @@
 from flask import ( 
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-
 from werkzeug.exceptions import abort
-
 from thelastchapter.db import get_db
-
-from thelastchapter.account import get_books
-
+from thelastchapter.utilities import (
+    res_format, get_books, get_displayed_lists
+)
 from thelastchapter.auth import (
     login_required, check_permissions, permissions, check_list_ownership, actions
 )
 
 bp = Blueprint('list', __name__, url_prefix='/lists')
-
-def get_displayed_lists():
-    db = get_db()
-    lists = db.execute(
-        'SELECT l.id, l.user_id, l.name FROM home_display hd JOIN list_names l ON hd.list_id = l.id'
-    ).fetchall()
-    return lists
-
-def get_books(list):
-    list_owner = list['user_id']
-    db = get_db()
-    books = db.execute('SELECT * FROM book_lists l JOIN books b ON l.book_id = b.id' +  
-    ' WHERE l.list_id = ?', (list['id'],)).fetchall()
-# SELECT * from book_lists l JOIN books b ON l.book_id = b.id WHERE l.list_id = 1
-    if books is None:
-        return None
-    return (list['name'], list['id'], books, list_owner)
-
-def get_full_displayed_lists():
-    list_data = get_displayed_lists()
-    lists = [ get_books(entry) for entry in list_data ]
-    return lists
 
 def check_existence(list_id, book_id):
     db = get_db()
@@ -43,11 +19,6 @@ def check_existence(list_id, book_id):
     if book is None or book_list is None:
         abort(404)
     return None
-
-def res_format(dbStatus, message, list_id=None, list_name=None):
-    if not list_id:
-        return { 'dbStatus': dbStatus, 'message': message }
-    return { 'dbStatus': dbStatus, 'message': message, 'list_id': list_id, 'list_name': list_name }
 
 @bp.route('/create', methods=('POST',))
 @login_required
@@ -64,7 +35,7 @@ def create():
     cursor.execute('INSERT INTO book_lists (list_id, book_id) VALUES ( ?, ? )',
         (list_id, book_id))
     db.commit()
-    return res_format('success', 'New list successfully created!', list_id, name)
+    return res_format('success', 'New list created!', list_id, name)
 
 @bp.route('/display')
 @login_required

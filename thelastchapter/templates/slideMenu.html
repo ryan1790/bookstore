@@ -12,7 +12,10 @@
             <a class="slide-menu-item" href="{{ url_for('account.display') }}">{{ userSvg('nav-svg') }} Account</a>
         {% endif %}
         {% if g.user.permissions in g.permissions[g.actions.create_book] %}
-            <a class="slide-menu-item" href="{{ url_for('book.create') }}"> New Book</a>
+            <a class="slide-menu-item" href="{{ url_for('book.create') }}">New Book</a>
+        {% endif %}
+        {% if g.user.permissions in g.permissions[g.actions.alter_user_permissions] %}
+        <a class="slide-menu-item" href="{{ url_for('auth.update_permissions') }}">Alter Permissions</a>
         {% endif %}
         {% for genre in genres %}
             <a class="slide-menu-item" href="{{ url_for('category.display', genre_id=genre.id) }}">{{ genre.name }}</a>

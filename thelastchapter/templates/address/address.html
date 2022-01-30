@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="form-title">Add or Choose {% block title %}Address{% endblock %}</h1>
+<div class="form-container">
+    {% if addresses|length > 0 %}
+    <h2 class="sub-title">Choose Saved Address</h2>
+    <form class="main-form" action="{{ url_for('address.add_address') }}" method="POST">
+        {% for address in addresses %}
+        <div class="address-card">
+            <input type="radio" name="address_id" id="address-{{loop.index}}" value="{{address.id}}">
+            <label for="address-{{loop.index}}">
+                <div class="address-info">
+                    <div>Name: {{ address.name }}</div>
+                    <div>Address: {{ address.address }}</div>
+                    <div>City: {{ address.city }}</div>
+                    <div>Zip Code: {{ address.zip_code }}</div>
+                    <div>State: {{ address.state }}</div>
+                </div>
+            </label>
+            <a class="login address-btn" href="{{ url_for('address.update_address', address_id=address.id) }}">Edit</a>
+        </div>
+        {% if not loop.last %}
+        <hr class="address-divider">
+        {% endif %}
+        {% endfor %}
+        <button type=submit class="login choose-address">Choose Address</button>
+    </form>
+{% endif %}
+    <h2 class="sub-title">Enter New Address</h2>
+    <form class="main-form" action="{{ url_for('address.add_address') }}" method="POST">
+        <label class="form-label" for="name">Name (optional): </label>
+        <input class="text-input" autocomplete="name" type="text" name="name" id="name">
+        <label class="form-label" for="address">Enter Address: </label>
+        <input class="text-input" autocomplete="street-address" type="text" name="address" id="address" required>
+        <label class="form-label" for="city">Enter Town/City: </label>
+        <input class="text-input" autocomplete="address-level2" type="text" name="city" id="city" required>
+        <label class="form-label" for="zip-code">Enter 5 Digit Zip Code: </label>
+        <input class="text-input" autocomplete="postal-code" type="text" name="zip-code" id="zip-code" inputmode="numeric" required>
+        <label class="form-label" for="state">Select State: </label>
+        <div class="custom-select">
+            <select autocomplete="address-level1" name="state" id="state" required>
+                {% for state in states %}
+                <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <label class="form-label" for="country">Country (must be in US): </label>
+        <input class="text-input" type="text" value="US" disabled>
+        <button type="submit" class="login">Set Address</button>
+    </form>
+    
+</div>
+{% endblock %}

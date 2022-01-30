@@ -2,11 +2,8 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.exceptions import abort
-
 from thelastchapter.db import get_db
-
 from thelastchapter.auth import actions, check_permissions, login_required
-
 from math import ceil
 
 bp = Blueprint('category', __name__, url_prefix='/genre')
@@ -111,5 +108,8 @@ def search():
     else:
         page = 1
     query = args['query']
+    if len(query) == 0:
+        flash('Must enter a query to search')
+        return redirect(request.referrer)
     books, page, lastpage = get_search_results(query, page)
     return render_template('category/search.html', query=query, books=books, page=page, lastpage=lastpage)

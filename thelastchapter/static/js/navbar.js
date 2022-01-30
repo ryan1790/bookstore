@@ -37,6 +37,7 @@ function handleClose(e) {
 function handleSearch(e) {
 	if (e.keyCode !== 13) return;
 	query = search.value;
+	if (query.length === 0) return;
 	window.location.href = `/search?query=${query}`;
 }
 

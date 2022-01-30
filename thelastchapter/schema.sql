@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS list_names;
 DROP TABLE IF EXISTS book_lists;
 DROP TABLE IF EXISTS home_display;
 DROP TABLE IF EXISTS carts;
+DROP TABLE IF EXISTS addresses;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS order_books;
 
@@ -51,7 +52,8 @@ CREATE VIRTUAL TABLE books_fts USING fts5(
     genre,
     isbn,
     content="books",
-    content_rowid="id"
+    content_rowid="id",
+    tokenize = "unicode61 remove_diacritics 0 tokenchars '-:.,<>/?;[]{}()%$@!\|+=&^'"
 );
 
 CREATE TRIGGER books_ai AFTER INSERT ON books
@@ -99,16 +101,30 @@ CREATE TABLE carts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     book_id INTEGER NOT NULL,
-    quantity INTEGER DEFAULT 1,
+    quantity INTEGER DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (book_id) REFERENCES books (id)
+);
+
+CREATE TABLE addresses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    city TEXT NOT NULL,
+    address TEXT NOT NULL,
+    zip_code TEXT NOT NULL,
+    state TEXT NOT NULL,
+    country TEXT NOT NULL,
+    name TEXT
 );
 
 CREATE TABLE orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
+    address_id INTEGER NOT NULL,
+    payment_id TEXT NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (address_id) REFERENCES addresses (id)
 );
 
 CREATE TABLE order_books (

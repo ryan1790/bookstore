@@ -4,13 +4,13 @@
 {% from 'pagination.html' import pagination %}
 
 {% block content %}
-<h1 class="list-title">{% block title %}Search{% endblock %}: {{ query }}</h1>
+<h1 class="list-title">{% block title %}Search{% endblock %}: <span class="query">{{ query }}</span></h1>
 {% if lastpage > 1 and books|length > 6 %}
     {{ pagination(page, lastpage, 'category.display', query=query) }}
 {% endif %}
 <div class="category-display">
     {% if books|length == 0 %}
-        <div class="section-header">No books found! Try another search</div>
+        <div class="empty">No books found! Try another search</div>
     {% else %}
         {% for book in books %}
             <div class="grid-card">

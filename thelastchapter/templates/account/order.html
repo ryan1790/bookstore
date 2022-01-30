@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Display Order{% endblock %}
+
+{% block content %}
+<h1 class="form-title">Order from: {{order_data.date}}</h1>
+<div class="container-order">
+    <h2 class="sub-title">Items Ordered</h2>
+    <div class="grid-checkout-container">
+        {% for book in order %}
+        <div><span class="title">{{book.title}}</span> by {{book.author}}</div>
+        <div>Quantity: {{book.quantity}}</div>
+        <div>Cost: <span class="price">{{"%.2f"|format(book.quantity|float * book.price|float)}}</span></div>
+        {% endfor %}
+    </div>
+    <h4>Total: <span class="price">{{total}}</span></h4>
+    <h2 class="sub-title">Address</h2>
+    <div class="address-card">
+        <div class="address-info">
+            <div>Name: {{ address.name }}</div>
+            <div>Address: {{ address.address }}</div>
+            <div>City: {{ address.city }}</div>
+            <div>Zip Code: {{ address.zip_code }}</div>
+            <div>State: {{ address.state }}</div>
+        </div>
+    </div>
+</div>
+<a href="{{ url_for('account.display') }}" class="update-link"> Return to Account Page</a>
+{% endblock %}

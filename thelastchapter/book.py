@@ -2,9 +2,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.exceptions import abort
-
 from thelastchapter.db import get_db
-
 from thelastchapter.auth import actions, check_permissions, login_required
 
 bp = Blueprint('book', __name__, url_prefix='/books')
@@ -17,7 +15,7 @@ def get_book(id):
         abort(404, f"Book id {id} doesn't exist.")
     return book
 
-def get_lists(user_id):
+def get_list_data(user_id):
     db = get_db()
     lists = db.execute('SELECT * FROM list_names WHERE user_id = ?', (user_id,)).fetchall()
     return lists
@@ -60,7 +58,7 @@ def create():
 def display(id):
     book = get_book(id)
     if g.user:
-        lists = get_lists(g.user['id'])
+        lists = get_list_data(g.user['id'])
     else: lists = []
     return render_template('book/display.html', book=book, lists=lists)
 
@@ -88,7 +86,7 @@ def update(id):
             return redirect(url_for('book.update'))
         book = get_book(id)
         db = get_db()
-        data = db.execute('SELECT name FROM genres WHERE id = ?', (genre_id,))
+        data = db.execute('SELECT name FROM genres WHERE id = ?', (genre_id,)).fetchone()
         if data is None:
             abort(404, 'Genre not found')
         genre = data['name']

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="form-title">{% block title %}Update Address{% endblock %}</h1>
+<div class="form-container">
+    <form class="main-form" method="POST" action="{{ url_for('address.update_address', address_id=address.id) }}">
+        <label class="form-label" for="name">Name (optional): </label>
+        <input class="text-input" value="{{ address.name }}" autocomplete="name" type="text" name="name" id="name">
+        <label class="form-label" for="address">Address: </label>
+        <input class="text-input" value="{{ address.address }}" autocomplete="street-address" type="text" name="address" id="address" required>
+        <label class="form-label" for="city">Town/City: </label>
+        <input class="text-input" value="{{ address.city }}" autocomplete="address-level2" type="text" name="city" id="city" required>
+        <label class="form-label" for="zip-code">5 Digit Zip Code: </label>
+        <input class="text-input" value="{{ address.zip_code }}" autocomplete="postal-code" type="text" name="zip-code" id="zip-code" inputmode="numeric" required>
+        <label class="form-label" for="state">Select State: </label>
+        <div class="custom-select">
+            <select autocomplete="address-level1" name="state" id="state" required>
+                {% for state in states %}
+                <option {{ ' selected ' if state == address.state else '' }} value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <label class="form-label" for="country">Country (must be in US): </label>
+        <input class="text-input" type="text" value="US" disabled>
+        <button type="submit" class="login">Update</button>
+    </form>
+    <form action="{{ url_for('address.delete_address', address_id=address.id) }}" method="POST">
+        <button class="login danger">Delete</button>
+    </form>
+
+</div>
+
+{% endblock %}

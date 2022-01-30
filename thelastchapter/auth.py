@@ -1,11 +1,8 @@
 import functools
-
 from flask import ( 
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from thelastchapter.db import get_db
 
 bp = Blueprint('auth', __name__)
@@ -16,7 +13,7 @@ permissions = {
     'ALTER_USER_PERMISSIONS': ('ADMIN',),
     'BOOK_CREATE': ('ADMIN', 'EDITOR'),
     'BOOK_UPDATE': ('ADMIN', 'EDITOR'),
-    'DELETE_BOOK': ('ADMIN',),
+    'BOOK_DELETE': ('ADMIN',),
     'HOME_LISTS_UPDATE': ('ADMIN', 'EDITOR'),
 }
 

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<h1 class="form-title">Order Successfully Sent</h1>
+<h3>Order Details</h3>
+<div class="checkout-container">
+    <div class="purchase-list">
+        <h2 class="sub-title">Items Purchased</h2>
+        <div class="grid-checkout-container">
+            {% for book in order %}
+                <div><span class="title">{{book.title}}</span> by {{book.author}}</div>
+                <div>Quantity: {{book.quantity}}</div>
+                <div>Cost: <span class="price">{{"%.2f"|format(book.quantity|float * book.price|float)}}</span></div>
+            {% endfor %}
+        </div>
+        <div class="total">Total: <span class="price">{{"%.2f"|format(total/100)}}</span></div>
+    </div>
+    <h2 class="sub-title">Mailing Address</h2>
+    <div class="address-box">
+        <div>Name: {{ address.name }}</div>
+        <div>Address: {{ address.address }}</div>
+        <div>City: {{ address.city }}</div>
+        <div>Zip Code: {{ address.zip_code }}</div>
+        <div>State: {{ address.state }}</div>
+    </div>
+{% endblock %}

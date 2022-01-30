@@ -29,9 +29,9 @@
             <label for="isbn" class="form-label">ISBN: </label>
             <input required id="isbn" name="isbn" type="text" class="text-input">
             <label for="stock" class="form-label">Stock: </label>
-            <input type="number" name="stock" class="text-input" step=".01" id="stock" min="0">
+            <input type="number" name="stock" class="text-input" step="1" id="stock" min="0">
             <label for="price" class="form-label">Price: </label>
-            <input required id="price" name="price" type="number" min="0" class="text-input">
+            <input required id="price" name="price" step=".01" type="number" min="0" class="text-input">
             <button class="login">Create Book</button>
         </form>
     </div>

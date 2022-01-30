@@ -1,14 +1,11 @@
 import functools
-
 from flask import ( 
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-
-from thelastchapter.auth import login_required, check_password_hash, generate_password_hash
-
 from werkzeug.exceptions import abort
-
+from thelastchapter.auth import login_required, check_password_hash, generate_password_hash
 from thelastchapter.db import get_db
+from thelastchapter.utilities import get_books, get_cart, get_order_data, get_order_details
 
 bp = Blueprint('account', __name__, url_prefix='/account')
 
@@ -20,16 +17,6 @@ def get_lists(id):
         return None
     return lists
 
-def get_books(list):
-    list_owner = list['user_id']
-    db = get_db()
-    books = db.execute('SELECT * FROM book_lists l JOIN books b ON l.book_id = b.id' +  
-    ' WHERE l.list_id = ?', (list['id'],)).fetchall()
-# SELECT * from book_lists l JOIN books b ON l.book_id = b.id WHERE l.list_id = 1
-    if books is None:
-        return None
-    return (list['name'], list['id'], books, list_owner)
-
 @bp.route('/')
 @login_required
 def display():
@@ -38,7 +25,9 @@ def display():
         lists = []
     else:
         lists = [ get_books(book_list) for book_list in lists_data ]
-    return render_template('account/display.html', lists=lists)
+    cart = get_cart()
+    orders = get_order_data()
+    return render_template('account/display.html', lists=lists, cart=cart, orders=orders)
 
 @bp.route('/update', methods=('GET', 'POST'))
 @login_required
@@ -47,27 +36,50 @@ def update():
         email = request.form['email']
         username = request.form['username']
         old_password = request.form['old-password']
-        check_password = request.form['check-password']
         new_password = request.form['new-password']
-        print('\n\n\n', email, username, old_password, check_password, new_password, '\n\n\n')
+        check_password = request.form['check-password']
         error = None
-        if new_password != check_password:
-            error = 'Confirmed password did not match!'
-        if error is None and not check_password_hash(g.user['password'], old_password):
-            error = 'Original password incorrect'
+        update_password = len(old_password) != 0
+        if update_password:
+            if new_password != check_password:
+                error = 'Confirmed password did not match!'
+            if len(new_password) == 0:
+                error = 'Must enter a new password!'
+            if error is None and not check_password_hash(g.user['password'], old_password):
+                error = 'Original password incorrect'
         if error is None:
             db = get_db()
-            try:
-                db.execute('UPDATE users SET email = ?, username = ?, password = ?'
-                        'WHERE id = ?',
-                        (email, username, generate_password_hash(new_password), g.user['id']))
+            if update_password:
+                try:
+                    db.execute('UPDATE users SET email = ?, username = ?, password = ?'
+                            ' WHERE id = ?',
+                            (email, username, generate_password_hash(new_password), g.user['id']))
+                except db.IntegrityError:
+                    error = f"Email {email} is already in use"
+            else:
+                try:
+                    db.execute(
+                        'UPDATE users SET email = ?, username = ? WHERE id = ?',
+                        (email, username, g.user['id'])
+                        )
+                except db.IntegrityError as er:
+                    error = f"{er}"
+            if error is None:
                 db.commit()
                 user = db.execute('SELECT * FROM users WHERE id = ?', (g.user['id'],)).fetchone()
                 g.user = user
-            except db.IntegrityError:
-                error = f"Email {email} is already in use"
-            else:
-                return redirect(url_for('account.display'))
-        flash(error)
+        if (error):
+            flash(error)
         return redirect(url_for('account.update'))
     return render_template('account/update.html')
+
+@bp.route('/<int:order_id>', methods=('GET', 'POST'))
+@login_required
+def display_order(order_id):
+    order_data, order, address = get_order_details(order_id)
+    total = sum([ int(b['quantity']) * float(b['price']) for b in order ])
+    display = "{:,.2f}".format(total)
+    if request.method == 'POST':
+        # remove_order(order_id)
+        return redirect(url_for('account.display'))
+    return render_template('account/order.html', order_data=order_data, order=order, address=address, total=display)
