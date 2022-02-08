@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-
+{% block title %}Order Status{% endblock %}
 {% block content%}
-<h1 class="form-title">Order Successfully Sent</h1>
-<h3>Order Details</h3>
+<h1 class="form-title" id="message" data-stripe-key="{{ stripe_key }}"></h1>
+<h3 class="title">Order Details</h3>
 <div class="checkout-container">
     <div class="purchase-list">
         <h2 class="sub-title">Items Purchased</h2>

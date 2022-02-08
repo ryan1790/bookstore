@@ -7,9 +7,9 @@ from thelastchapter.auth import actions, check_permissions, login_required
 from math import ceil
 
 bp = Blueprint('category', __name__, url_prefix='/genre')
+LIMIT = 8
 
 def get_by_genre(genre_id, page=1):
-    limit = 8
     try:
         page = int(page)
     except (TypeError, ValueError):
@@ -23,13 +23,13 @@ def get_by_genre(genre_id, page=1):
     count = data['count']
     if count == 0:
         return None, genre
-    lastpage = ceil(count/limit)
+    lastpage = ceil(count/LIMIT)
     if page > lastpage:
         page = lastpage
     if page == 1:
         cutoff = { 'title': '', 'id': 0 }
     else:
-        offset = limit * (page - 1) - 1
+        offset = LIMIT * (page - 1) - 1
         cutoff = db.execute(
             'SELECT id, title FROM books WHERE genre_id = ?'
             ' ORDER BY title ASC, id ASC LIMIT 1 OFFSET ?',
@@ -39,12 +39,15 @@ def get_by_genre(genre_id, page=1):
         'SELECT id, title, author, price, stock, image'
         ' FROM books WHERE genre_id = ? AND (title, id) > ( ?, ? ) ORDER BY title, id'
         ' LIMIT ?'
-        , (genre_id, cutoff['title'], cutoff['id'], limit)
+        , (genre_id, cutoff['title'], cutoff['id'], LIMIT)
     ).fetchall()
     return genre, books, page, lastpage
 
 def get_search_results(query, page=1):
-    limit = 5
+    split = query.split(' ')
+    adjusted_query = ''
+    for entry in split:
+        adjusted_query = f'{adjusted_query} "{entry}"'
     try:
         page = int(page)
     except (TypeError, ValueError):
@@ -53,27 +56,27 @@ def get_search_results(query, page=1):
     cur = db.cursor()
     data = cur.execute(
         'SELECT COUNT(rowid) as count, MIN(rank) as rank'
-        ' FROM books_fts WHERE books_fts MATCH ?', (query,)
+        ' FROM books_fts WHERE books_fts MATCH ?', (adjusted_query,)
     ).fetchone()
     count = data['count']
-    lastpage = ceil(count/limit)
+    lastpage = ceil(count/LIMIT)
     if data['rank'] is None:
         return [], page, lastpage
     if page == 1:
         cutoff = { 'rank': data['rank'] - 1, 'id': 0 }
     else:
-        offset = limit * (page - 1) - 1
+        offset = LIMIT * (page - 1) - 1
         cutoff = db.execute(
             'SELECT rowid as id, rank FROM books_fts WHERE books_fts MATCH ?'
             ' ORDER BY rank ASC, id ASC LIMIT 1 OFFSET ?',
-            (query, offset)
+            (adjusted_query, offset)
         ).fetchone()
     books = db.execute(
         'SELECT b.author, b.title, b.image, b.stock, b.price, b.id'
         ' FROM books_fts JOIN books b ON books_fts.rowid = b.id'
         ' WHERE books_fts MATCH ? AND (rank, id) > (?, ?)'
         ' ORDER BY rank ASC, id ASC LIMIT ?',
-        (query, cutoff['rank'], cutoff['id'], limit)
+        (adjusted_query, cutoff['rank'], cutoff['id'], LIMIT)
     ).fetchall()
     if books is None:
         books = []
@@ -102,7 +105,8 @@ def display(genre_id):
 def search():
     args = request.args
     if 'query' not in args:
-        return redirect(request.referrer)
+        print('um')
+        return redirect(url_for('home'))
     if 'page' in args:
         page = args['page']
     else:
@@ -110,6 +114,6 @@ def search():
     query = args['query']
     if len(query) == 0:
         flash('Must enter a query to search')
-        return redirect(request.referrer)
+        return redirect(url_for('home'))
     books, page, lastpage = get_search_results(query, page)
     return render_template('category/search.html', query=query, books=books, page=page, lastpage=lastpage)

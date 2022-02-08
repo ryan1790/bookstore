@@ -35,7 +35,6 @@ def create_app(test_config=None):
     app.register_blueprint(category.bp)
     app.register_blueprint(address.bp)
     app.add_url_rule('/search', 'search', category.search)
-    app.add_url_rule('/stripe', 'my_webhook_view', cart.my_webhook_view, methods=('POST',))
     app.add_url_rule('/cart/checkout/address', 'address.add_address', address.add_address, methods=('GET', 'POST'))
 
     return app

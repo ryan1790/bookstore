@@ -89,44 +89,35 @@ def checkout():
 @login_required
 def status():
     args = request.args
-    # if 'payment_intent_client_secret' not in args and 'payment_intent' not in args:
-    #     return redirect(url_for('cart.display'))
+    if 'payment_intent_client_secret' not in args and 'payment_intent' not in args:
+        return redirect(url_for('cart.display'))
     client_secret = args['payment_intent_client_secret']
     pi_id = args['payment_intent']
     intent = stripe.PaymentIntent.retrieve(pi_id)
-    if intent is None or intent['status'] != 'succeeded':
+    if intent is None:
         return redirect(url_for('cart.display'))
-    total = intent['amount']
-    order_data, order, address = cart_to_order(pi_id, intent.metadata['a_id']) # double check this
-    session['intent_id'] = None
+    if intent['status'] == 'succeeded':
+        total = intent['amount']
+        db = get_db()
+        order = db.execute(
+            'SELECT id FROM orders WHERE user_id=? AND payment_id=?',
+            (g.user['id'], pi_id)
+        ).fetchone()
+        if order is None:
+            order_data, order, address = cart_to_order(pi_id, intent.metadata['a_id']) # double check this
+            session['intent_id'] = None
+        else:
+            order_data, order, address = get_order_details(order['id'])
+
     return render_template(
         'cart/status.html', 
         order_data=order_data,
         order=order,
         address=address,
         total=total,
-        client_secret=client_secret
+        client_secret=client_secret,
+        stripe_key=stripe_key
     )
-
-def my_webhook_view():
-    payload = request.get_data(as_text='true')
-    if 'STRIPE_SIGNATURE' not in request.headers:
-        return Response(status=400)
-    sig_header = request.headers['STRIPE_SIGNATURE']
-    event = None
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, webhook_secret
-        )
-    except ValueError as e:
-        # Invalid payload
-        return Response(status=400)
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        return Response(status=400)
-    # Passed signature verification
-    return Response(status=200)
-
 
 @bp.route('/<int:book_id>/add', methods=('POST',))
 @login_required

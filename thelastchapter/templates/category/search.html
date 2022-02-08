@@ -6,7 +6,7 @@
 {% block content %}
 <h1 class="list-title">{% block title %}Search{% endblock %}: <span class="query">{{ query }}</span></h1>
 {% if lastpage > 1 and books|length > 6 %}
-    {{ pagination(page, lastpage, 'category.display', query=query) }}
+    {{ pagination(page, lastpage, 'search', query=query) }}
 {% endif %}
 <div class="category-display">
     {% if books|length == 0 %}

@@ -8,10 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} {% endblock %} - TLC</title>
-    {% if true %}
-        <script src="https://js.stripe.com/v3/"></script>
-        <script src="{{ url_for('static', filename='js/checkout.js') }}" defer></script>
-    {% endif %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{{ url_for('static', filename='js/checkout.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/status.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/navbar.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/scrollButtons.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/wishlist.js') }}" defer></script>
@@ -93,7 +92,7 @@
             {% block content %}{% endblock %}
         </section>
         <footer class="footer">
-            <div class="footer-text">Not quite a clone, but heavily inspired by <a href="https://bookshop.org/">Bookshop</a></div>
+            <div class="footer-text">Design heavily inspired by <a href="https://bookshop.org/">Bookshop</a></div>
             <div class="footer-text">All SVG elements are from <a href="https://fontawesome.com/license">Font Awesome</a></div>
         </footer>
     </div>

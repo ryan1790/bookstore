@@ -2,8 +2,8 @@
 
 {% block content %}
 <h1 class="form-title">Add or Choose {% block title %}Address{% endblock %}</h1>
+{% if addresses|length > 0 %}
 <div class="form-container">
-    {% if addresses|length > 0 %}
     <h2 class="sub-title">Choose Saved Address</h2>
     <form class="main-form" action="{{ url_for('address.add_address') }}" method="POST">
         {% for address in addresses %}
@@ -26,7 +26,9 @@
         {% endfor %}
         <button type=submit class="login choose-address">Choose Address</button>
     </form>
+</div>
 {% endif %}
+<div class="form-container">
     <h2 class="sub-title">Enter New Address</h2>
     <form class="main-form" action="{{ url_for('address.add_address') }}" method="POST">
         <label class="form-label" for="name">Name (optional): </label>
@@ -49,6 +51,5 @@
         <input class="text-input" type="text" value="US" disabled>
         <button type="submit" class="login">Set Address</button>
     </form>
-    
 </div>
 {% endblock %}

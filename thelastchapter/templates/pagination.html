@@ -18,9 +18,7 @@
                     <a href="{{ url_for(route, genre_id=kwargs['genre_id'], page=x+1) }}" class="page-button {{ 'selected' if x == curP else '' }}">{{ x }}</a>
                 {% endfor %}
             {% endif %}
-        {% endif %}
-
-        {% if 'query' in kwargs %}
+        {% elif 'query' in kwargs %}
             {% if lastP <= 7 %}
             {% for x in range(lastP) %}
                 <a href="{{ url_for(route, query=kwargs['query'], page=x+1) }}" class="page-button {{ 'selected' if x + 1 == curP else '' }}">{{ x+1 }}</a>

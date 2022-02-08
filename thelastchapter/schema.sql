@@ -53,7 +53,7 @@ CREATE VIRTUAL TABLE books_fts USING fts5(
     isbn,
     content="books",
     content_rowid="id",
-    tokenize = "unicode61 remove_diacritics 0 tokenchars '-:.,<>/?;[]{}()%$@!\|+=&^'"
+    tokenize="unicode61  tokenchars '.-:,'"
 );
 
 CREATE TRIGGER books_ai AFTER INSERT ON books

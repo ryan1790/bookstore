@@ -24,6 +24,13 @@ def init_db():
             db.cursor().executescript(f.read())
         db.commit()
 
+def seed_db():
+    with current_app.app_context():
+        db = get_db()
+        with current_app.open_resource('seedSQLite.sql', mode='r') as f:
+            db.cursor().executescript(f.read())
+        db.commit()
+
 @click.command('init-db')
 @with_appcontext
 def init_db_command():
@@ -31,6 +38,14 @@ def init_db_command():
     init_db()
     click.echo('Initialized the database')
 
+@click.command('seed-db')
+@with_appcontext
+def seed_db_command():
+    """Fill database with some data for testing purposes"""
+    seed_db()
+    click.echo('Seed successfull')
+
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+    app.cli.add_command(seed_db_command)
