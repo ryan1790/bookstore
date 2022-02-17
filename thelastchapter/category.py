@@ -1,9 +1,7 @@
 from flask import ( 
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.exceptions import abort
 from thelastchapter.db import get_db
-from thelastchapter.auth import actions, check_permissions, login_required
 from math import ceil
 
 bp = Blueprint('category', __name__, url_prefix='/genre')
@@ -47,7 +45,10 @@ def get_search_results(query, page=1):
     split = query.split(' ')
     adjusted_query = ''
     for entry in split:
-        adjusted_query = f'{adjusted_query} "{entry}"'
+        if len(adjusted_query) == 0:
+            adjusted_query = f'"{entry}"'
+        else:
+            adjusted_query = f'{adjusted_query} "{entry}"'
     try:
         page = int(page)
     except (TypeError, ValueError):

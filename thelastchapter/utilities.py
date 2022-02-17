@@ -13,6 +13,10 @@ STATES = [ 'AK','AL','AR','AS', 'AZ','CA', 'CM', 'CO', 'CT', 'DC', 'DE',
 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 
 'TT', 'TX', 'UT', 'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY' ]
 
+def check_id(id):
+    if not str(id).isnumeric():
+        abort(404)
+
 def res_format(dbStatus, message, list_id=None, list_name=None):
     if not list_id:
         return { 'dbStatus': dbStatus, 'message': message }

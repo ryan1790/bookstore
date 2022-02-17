@@ -4,6 +4,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from thelastchapter.db import get_db
+from thelastchapter.validation.account_validation import LogIn, AlterPermissions
 
 bp = Blueprint('auth', __name__)
 
@@ -69,23 +70,19 @@ def check_list_ownership(list_id, AJAX=False):
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        form = LogIn()
+        form.validate()
+        error = form.error
         db = get_db()
-        error = None
-        if not email:
-            error = 'Email is required'
-        elif not password:
-            error = 'Password is required'
         if error is None:
             try:
                 db.execute(
                     "INSERT INTO users (email, password) VALUES (?, ?)",
-                    (email, generate_password_hash(password))
+                    (form.email, generate_password_hash(form.password))
                 )
                 db.commit()
                 user = db.execute(
-                    "SELECT * FROM users where email = ?", (email,)
+                    "SELECT * FROM users where email = ?", (form.email,)
                 ).fetchone()
                 if user is None:
                     return redirect(url_for('auth.login'))
@@ -94,8 +91,8 @@ def register():
                 g.user = user
                 return redirect(url_for('home'))
             except db.IntegrityError:
-                error = f"User {email} is already registered"
-            flash(error)
+                error = f"Email {form.email} is already registered"
+                flash(error)
             return redirect(url_for('auth.register'))
         else:
             flash(error)
@@ -106,23 +103,22 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        form = LogIn()
+        form.validate()
+        error = form.error
         db = get_db()
-        error = None
         user = db.execute(
-            "SELECT * FROM users WHERE email = ?", (email,)
+            "SELECT * FROM users WHERE email = ?", (form.email,)
         ).fetchone()
         if user is None:
-            error = 'Incorrect username.'
-        elif not check_password_hash(user['password'], password):
+            error = 'Incorrect email'
+        if not error and not check_password_hash(user['password'], form.password):
             error = 'Incorrect password.'
         if error is None:
             session.clear()
             session['user_id'] = user['id']
             return redirect(url_for('home'))
         flash(error)
-        return redirect(url_for('auth.login'))
     return render_template('auth/login.html')
 
 @bp.before_app_request
@@ -156,15 +152,18 @@ def logout():
 @check_permissions(actions['alter_user_permissions'])
 def update_permissions():
     if request.method == 'POST':
-        db = get_db()
-        email = request.form['email']
-        role = request.form['role']
-        user = db.execute('SELECT id FROM users WHERE email = ?', (email,)).fetchone()
-        if user is None:
-            flash('User not found')
+        form = AlterPermissions()
+        form.validate()
+        error = form.error
+        if error is None:
+            db = get_db()
+            user = db.execute('SELECT id FROM users WHERE email = ?', (form.email,)).fetchone()
+            if user is None:
+                flash('User not found')
+                return redirect(url_for('auth.update_permissions'))
+            db.execute('UPDATE users SET permissions = ? WHERE id = ?', (form.role, user['id']))
+            db.commit()
+            flash("User's permissions updated")
             return redirect(url_for('auth.update_permissions'))
-        db.execute('UPDATE users SET permissions = ? WHERE id = ?', (role, user['id']))
-        db.commit()
-        flash("User's permissions updated")
-        return redirect(url_for('auth.update_permissions'))
+        flash(error)
     return render_template('auth/permissions.html', roles=roles)

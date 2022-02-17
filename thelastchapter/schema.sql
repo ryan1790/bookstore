@@ -70,7 +70,7 @@ CREATE TRIGGER books_ad AFTER DELETE ON books
 
 CREATE TRIGGER books_au AFTER UPDATE ON books
     BEGIN
-        INSERT INTO books_fts (rowid, title, author, genre, isbn)
+        INSERT INTO books_fts (books_fts, rowid, title, author, genre, isbn)
         VALUES ('delete', old.id, old.title, old.author, old.genre, old.isbn);
         INSERT INTO books_fts (rowid, title, author, genre, isbn)
         VALUES (new.id, new.title, new.author, new.genre, new.isbn);

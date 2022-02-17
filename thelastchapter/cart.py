@@ -96,9 +96,9 @@ def status():
     intent = stripe.PaymentIntent.retrieve(pi_id)
     if intent is None:
         return redirect(url_for('cart.display'))
+    total = intent['amount']
+    db = get_db()
     if intent['status'] == 'succeeded':
-        total = intent['amount']
-        db = get_db()
         order = db.execute(
             'SELECT id FROM orders WHERE user_id=? AND payment_id=?',
             (g.user['id'], pi_id)
@@ -108,6 +108,10 @@ def status():
             session['intent_id'] = None
         else:
             order_data, order, address = get_order_details(order['id'])
+    else:
+        order = get_cart()
+        address = db.execute('SELECT * FROM addresses WHERE id = ? AND user_id = ?', (intent.metadat['a_id'], g.user['id'])).fetchone()
+        order_data = None
 
     return render_template(
         'cart/status.html', 

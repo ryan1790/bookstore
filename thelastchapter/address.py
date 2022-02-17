@@ -5,6 +5,7 @@ from werkzeug.exceptions import abort
 from thelastchapter.db import get_db
 from thelastchapter.auth import actions, check_permissions, login_required
 from thelastchapter.utilities import res_format, get_cart, STATES, get_order_details
+from thelastchapter.validation.address_validation import NewAddress
 from dotenv import dotenv_values
 import stripe
 
@@ -21,25 +22,17 @@ def add_address():
     intent_id = session.get('intent_id')
     db = get_db()
     if request.method == 'POST':
-        form = request.form
-        if 'address_id' in form:
-            address_id = form['address_id']
+        if 'address_id' in request.form:
+            address_id = request.form['address_id']
         else:
-            if 'name' in form:
-                name = form['name']
-            else:
-                name = ''
-            city = form['city']
-            address = form['address']
-            state = form['state']
-            country = 'US'
-            zip_code = form['zip-code']
+            form = NewAddress()
+            form.validate()
             cur = db.cursor()
             cur.execute(
                 'INSERT INTO addresses'
                 ' (user_id, city, address, zip_code, state, country, name) VALUES'
                 ' (?, ?, ?, ?, ?, ?, ?)',
-                (g.user['id'], city, address, zip_code, state, country, name)   
+                (g.user['id'], form.city, form.address, form.zip_code, form.state, form.country, form.name)   
             )
             address_id = cur.lastrowid
             db.commit()
@@ -63,19 +56,12 @@ def update_address(address_id):
         flash('Permission denied')
         return redirect(request.referrer)
     if request.method == 'POST':
-        form = request.form
-        if 'name' in form:
-            name = form['name']
-        else:
-            name = ''
-        city = form['city']
-        address = form['address']
-        zip_code = form['zip-code']
-        state = form['state']
+        form = NewAddress()
+        form.validate()
         db.execute(
             'UPDATE addresses SET city=?, address=?, zip_code=?, state=?, name=?'
-            ' WHERE id = ?', (city, address, zip_code, state, name, address_id)
-            )
+            ' WHERE id = ?', (form.city, form.address, form.zip_code, form.state, form.name, address_id)
+        )
         db.commit()
         return redirect(url_for('address.add_address'))
     return render_template('address/update.html', address=address, states=STATES)

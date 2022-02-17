@@ -926,6 +926,7 @@ iframe {
 	background-color: white;
 	border-radius: .5rem;
 	transition: background-color .2s ease-in;
+	cursor: pointer;
 }
 
 .remove:hover {
@@ -1254,6 +1255,7 @@ iframe {
 }
 
 .address-box {
+	text-align: center;
 	display: flex;
 	flex-direction: column;
 	gap: .5rem;
@@ -1262,10 +1264,6 @@ iframe {
 }
 
 .purchase-list {
-	margin-left: 1rem;
-}
-
-.sub-title + .address-box {
 	margin-left: 1rem;
 }
 
